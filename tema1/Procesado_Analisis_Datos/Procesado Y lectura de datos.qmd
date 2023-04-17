@@ -1,0 +1,300 @@
+---
+title: "Tema 1: Preprocesado y análisis estadístico"
+format: pdf
+editor: visual
+author: "MsC. Edmond Géraud"
+params:
+  data: "./datos"
+---
+
+# Lectura de datos
+
+Primero de todo necesitamos cargar las librerías necesarias
+
+```{r}
+library(dplyr) # Facil manipulacion de data frames
+library(ggplot2)# Graficos
+library(knitr)
+library(ggpubr)
+library(car)
+
+```
+
+1.  Antes, de leer los datos, necesitamos saber que extensión son para proceder con la lectura, es decir, si son .csv, .txt, u otro formato.
+
+```{r}
+
+archivo <- list.files(params$data,
+                      pattern = "*.arff",
+                      full.names = T,recursive = T)
+# file.show(archivo)
+```
+
+Podemos osbervar, como en realidad, es un archivo de texto, denominado arff. No obstante, tenemos que convertir dicho archivo a un data frame para poder manejarlo en R.
+
+Leemos el archivo por líneas. E imprimimos por pantalla las primeras líneas:
+
+```{r}
+predata <- readLines(archivo)
+print(head(predata))
+
+```
+
+Ahora obtenemos solamente la cabecera, la cual está compuesta del símbolo arroba
+
+```{r}
+filas_cabecera <- grep("@",predata)
+cabecera <- predata[filas_cabecera]
+print(cabecera)
+
+```
+
+Si hacemos un indexado negativo de la cabecera, tenemos los datos crudos
+
+```{r}
+predatos <- predata[-filas_cabecera]
+head(predatos)
+## convertimos a matriz para extraer el nombre
+```
+
+Ahora extraemos del archivo de texto plano, aquellas filas que empiecen con `"@attribute"`. Esto nos dice el nombre y el tipo de datos con los que tenemos que trabajar, al igual que la mayoría del significado de las columnas.
+
+```{r}
+filas_cabecera <- grep("@attribute",predata)
+
+pre_columnas <- predata[filas_cabecera]
+print(pre_columnas)
+```
+
+Tenemos 17 columnas...Observamos, como los datos, estan separados por un espacio, vamos a transformar la salida anterior en una matriz de caracteres. Para ello utilizamos la función `strsplit`. Esta función nos devuelve una lista de las separaciones.
+
+```{r}
+pre_columnas.list <- strsplit(predata[filas_cabecera]," ")
+print(length(pre_columnas.list))
+```
+
+Tenemos `r print(length(pre_columnas.list))` efectivamente. Ahora necesitamos manipular la lista para convertira el una matriz de 17X3. No obstante antes, de manipular debemos de pasar la lista a un string.
+
+```{r}
+pre_columnas.unlist <- unlist(pre_columnas.list)
+#convertimos a matriz
+cabecera.raw <- matrix(pre_columnas.unlist,nrow=length(pre_columnas.list),
+                   ncol=3,byrow = T)
+head(cabecera.raw)
+```
+
+De la cabecera nos importan la segunda y la tercera columna que son las que tienen información
+
+```{r}
+cabecera  <- cabecera.raw[,2:3]
+## tambien la podemos convertir a data frame.
+cabecera <- as.data.frame(cabecera)
+colnames(cabecera) <- c("Variable","Clase")
+cabecera
+```
+
+Ya tenemos la cabecera, ahora vamos por los datos. Si recordamos lo habíamos guardado en la variable `predatos`. Tambiién habíamos observado que estaban separados por comas. Por lo tanto procedemos a separarlos por dicho caracter, y a parte, sabemos que los datos se componen `r nrow(cabecera)` columnas. Especificamos que se ordenen por filas, mediante el comando `byrow=T`.
+
+```{r}
+datos <-
+  as.data.frame(matrix(
+    unlist(strsplit(predatos, ",")),
+    ncol = nrow(cabecera),
+    byrow = T
+  ))
+colnames(datos) <- cabecera$Variable
+head(datos)
+```
+
+## Preprocesado de datos
+
+En este paso, necesitamos identificar qué variables son numéricas y cuales son factores.
+
+```{r}
+str(datos)
+```
+
+Todas están catalogadas como caracter. Bien podemos ir variable por variable y asignar la clase a la que corresponde, o podemos realizar lo siguiente.
+
+```{r}
+vars.numericas <- grep("numeric",cabecera$Clase)
+datos[,vars.numericas]<- apply(datos[,vars.numericas]
+                               , 2, 
+                               as.numeric)
+datos[,-vars.numericas] <- lapply(datos[,-vars.numericas],
+                                 as.factor)
+str(datos)
+```
+
+Ahora bien, también podemos realizar una función con los pasos anteriores.
+
+La siguiente función hace lo mismo que el código anterior, asignando a las variables la clase que corresponde.
+
+```{r}
+read.arff <- function(file_name){
+  archivo <- readLines(file_name)
+  
+  filas_cabecera <- grep("@attribute", predata)
+  
+  pre_columnas <- predata[filas_cabecera]
+  pre_columnas.list <- strsplit(predata[filas_cabecera], " ")
+  cabecera  <- cabecera.raw[, 2:3]
+  cabecera <- as.data.frame(cabecera)
+  colnames(cabecera) <- c("Variable", "Clase")
+  datos <-
+    as.data.frame(matrix(
+      unlist(strsplit(predatos, ",")),
+      ncol = nrow(cabecera),
+      byrow = T
+    ))
+  colnames(datos) <- cabecera$Variable
+  datos <- as.data.frame(datos)
+  numericas <- grep("numeric",cabecera$Clase)
+  datos[,numericas] <- lapply(datos[,numericas],as.numeric)
+  datos[,-numericas] <- lapply(datos[,-numericas],as.factor)
+
+  
+  return(datos)
+  
+}
+```
+
+```{r}
+datos  <- read.arff(archivo)
+str(datos)
+```
+
+# Familiarización con los datos
+
+\[...\]he attributes related with eating habits are: Frequent consumption of high caloric food (FAVC), Frequency of consumption of vegetables (FCVC), Number of main meals (NCP), Consumption of food between meals (CAEC), Consumption of water daily (CH20), and Consumption of alcohol (CALC). The attributes related with the physical condition are: Calories consumption monitoring (SCC), Physical activity frequency (FAF), Time using technology devices (TUE), Transportation used (MTRANS), other variables obtained were: Gender, Age, Height and Weight. Finally, all data was labeled and the class variable NObesity was created with the values of: Insufficient Weight, Normal Weight, Overweight Level I, Overweight Level II, Obesity Type I, Obesity Type II and Obesity Type III \[...\]
+
+## Estadística numérica, gráfica e inferencial
+
+### La VI y VD son categóricas
+
+#### Numérica
+
+Los datos los componen 17 columnas y 2111 observaciones. Podemos realizar un summary de los datos.
+
+```{r}
+summary(datos)
+```
+
+Le podemos preguntar al conjunto de datos, cuantas variables son factores:
+
+```{r}
+factores <- colnames(datos)[which(unlist(lapply(datos,is.factor)))]
+```
+
+Nos podemos preguntar, en este conjunto de datos, cómo está relacionado el género con los distintos niveles de obesidad
+
+```{r}
+(obesidad.genero  <- datos %>% group_by(Gender,NObeyesdad) %>% reframe(n=n()) )
+```
+
+#### Gráfica
+
+Antes sería necesario graficar qué es lo que observamos, mediante unas barras
+
+```{r}
+ggplot(obesidad.genero,aes(y=n,x=NObeyesdad,fill=Gender)) + geom_bar(stat = "identity",position = "dodge")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Obesidad y Genero")
+```
+
+Sin embargo, al revisar el grafico, observamos que tienen números muy dispares, por tantos niveles en la clasificacion de la obesidad.
+
+```{r}
+datos$obesidad  <- as.character(datos$NObeyesdad)
+datos$obesidad[datos$obesidad=="Insufficient_Weight"]
+datos$obesidad[datos$obesidad=="Obesity_Type_I" | 
+                 datos$obesidad=="Obesity_Type_II"|
+                 datos$obesidad=="Obesity_Type_III"] <- "obesidad"
+datos$obesidad[datos$obesidad=="Overweight_Level_I"|
+                 datos$obesidad=="Overweight_Level_II"] <- "Sobrepeso"
+
+
+
+(obesidad.genero  <- datos %>% group_by(Gender,obesidad) %>% reframe(n=n()) )
+
+ggplot(obesidad.genero,aes(y=n,x=obesidad,fill=Gender)) + geom_bar(stat = "identity",position = "dodge")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Obesidad y Genero")
+```
+
+#### Inferencial
+
+Ahora ya nos podemos preguntar si los niveles en los que se le clasifica el peso a las personas esta mas ligado al sexo o no
+
+```{r}
+chisq.test(table(datos$obesidad,datos$Gender))
+```
+
+Efectivamente como el p valor es menor que 0.05, se rechaza la hipotesis nula de no asocicion entre el genero y la clasificacion del peso.
+
+Si bien queremos preguntarnos si la obesidad, ya sea de tipo I o II, esta mas ligada a los hombres, que aparenta serlo, debemos confirmarlo con el test chi cuadrado
+
+```{r}
+subsetdatos <- datos[datos$obesidad=="obesidad",c("obesidad","Gender")]
+subsetdatos$obesidad  <- as.factor(as.character(subsetdatos$obesidad))
+chisq.test(table(subsetdatos$obesidad,subsetdatos$Gender))
+```
+
+En realidad no hay asociacion entre la obesidad y el genero.
+
+### La VI es categórica y la VD es numérica
+
+En este caso, estaríamos pensando en una diferencia de medias o medianas.
+
+**SI LA VARIABLE CATEGÓRICA TIENE 2 NIVELES.**
+
+Nos podemos preguntar si existen diferencias en la altura respecto al género
+
+Es decir, si realizamos una prueba de diferencia de medias, la hipótesis sería
+
+$$
+H_0: \mu_h=\mu_m \\
+H_0: \mu_h-\mu_m=0
+$$
+
+```{r}
+altura <- datos$Height
+genero <- datos$Gender
+```
+
+Cómo hemos mencionado en clase, tenemos ciertas suposiciones a seguir. Donde siempre optaremos en una primera instancia por modelos paramétricos, antes de los no paramétricos, si se cumplen dichas suposicones
+
+1.   **T-TEST**
+
+    1.  La normalidad de los residuos, o la normalidad entre los niveles tiene que cumplirse
+
+    2.  Segun si tenemos varianzas iguales o no procederemos de otro modo
+
+```{r}
+lista.altura <- split(altura,genero)
+lapply(lista.altura,ks.test,"pnorm")
+```
+
+En una primera instancia, la prueba de kolmogorov nos dice que no siguen una normal los datos. No obstante si graficamos la densidad... observamos cosas diferentes
+
+```{r}
+p1 <- ggplot(datos,aes(x=Height,fill=Gender))+geom_density()
+p2 <- ggplot(datos,aes(y=Height,fill=Gender))+geom_boxplot()
+ggarrange(p1,p2)
+```
+
+De hecho, al ser tantnas observaciones, nos podemos fiar que los datos siguen una normal. Además, la media y la mediana estan bastante cerca entre sí.
+
+```{r}
+lapply(lista.altura,summary)
+```
+
+Ahora tendríamos que ver la igualdad de varianzas
+
+```{r}
+leveneTest(altura ~ genero)
+```
+
+Efectivamente la prueba de levene nos confirma que tenemos varianzas iguales. Entonces procedemos
+
+```{r}
+t.test(altura ~ genero,var.equal=T)
+```
+
+Y efectivamente como observamos en el grafico son diferentes.
