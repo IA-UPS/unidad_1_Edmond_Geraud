@@ -90,25 +90,19 @@ $$
 La regularización L1 o Lasso intenta minimizar la siguiente ecuación
 
 $$
-\begin{equation}
 \text{min } \frac{1}{2n} \sum_{i=1}^{n}(y_i - \beta_0 - \sum_{j=1}^{p}x_{ij}\beta_j)^2 + \lambda\sum_{j=1}^{p}|\beta_j|
-\end{equation}
 $$
 
 La regularización L2 o ridge:
 
 $$
-\begin{equation}
 \text{min } \frac{1}{2n} \sum_{i=1}^{n}(y_i - \beta_0 - \sum_{j=1}^{p}x_{ij}\beta_j)^2 + \lambda\sum_{j=1}^{p}\beta_j^2
-\end{equation}
 $$
 
 La elastic net:
 
-$$
-\begin{equation}
-\text{min } \frac{1}{2n} \sum_{i=1}^{n}(y_i - \beta_0 - \sum_{j=1}^{p}x_{ij}\beta_j)^2 + \lambda_1\sum_{j=1}^{p}|\beta_j| + \lambda_2\sum_{j=1}^{p}\beta_j^2
-\end{equation}
+\$\$
+$$\text{min } \frac{1}{2n} \sum_{i=1}^{n}(y_i - \beta_0 - \sum_{j=1}^{p}x_{ij}\beta_j)^2 + \lambda_1\sum_{j=1}^{p}|\beta_j| + \lambda_2\sum_{j=1}^{p}\beta_j^2
 $$
 
 Los métodos de regularización como L1, L2 y Elastic Net no tienen una solución cerrada o analítica, y generalmente se utilizan métodos numéricos iterativos para encontrar los coeficientes óptimos del modelo.
@@ -232,7 +226,7 @@ g  <- lm(siri ~.,data=train)
 summary(g)
 ```
 
-Observamos, cómo 7 variables son las más importantes en el modelo. De hecho tenemos un R2 de casi el 97 %
+Observamos, cómo 7 variables son las más importantes en el modelo. De hecho tenemos un R2 de casi el 97 porciento
 
 #### Predicción
 
