@@ -1,0 +1,367 @@
+---
+title: "Regularización y selección de características"
+format: pdf
+editor: visual
+author: "Edmond Géraud"
+---
+
+# Selección de características
+
+La selección de características es una técnica utilizada en aprendizaje automático para seleccionar un subconjunto de características relevantes y útiles para la tarea de predicción, con el objetivo de mejorar el rendimiento del modelo y reducir el riesgo de sobreajuste. En otras palabras, la selección de características se refiere al proceso de elegir un conjunto óptimo de características (variables o atributos) para el modelo predictivo, eliminando las características redundantes o irrelevantes que pueden afectar negativamente el rendimiento del modelo.
+
+## Selección de modelos por AIC
+
+El criterio de información de Akaike (AIC) es un método para seleccionar modelos estadísticos entre un conjunto de modelos candidatos. Fue propuesto por el estadístico japonés Hirotugu Akaike en 1974.
+
+El principio subyacente del AIC es que se prefiere un modelo que tenga un buen ajuste a los datos, pero que tenga un número mínimo de parámetros. El AIC combina estas dos medidas al considerar tanto la bondad de ajuste del modelo como el número de parámetros del modelo.
+
+El AIC se define como la suma del error cuadrático (o alguna otra medida de error) del modelo y el producto del número de parámetros del modelo y una constante que depende del número de observaciones. El modelo con el valor más bajo del AIC se considera el mejor modelo de entre los modelos candidatos.
+
+El AIC se basa en la idea de que el modelo más probable es aquel que minimiza la información perdida al modelar los datos, es decir, que tiene el equilibrio óptimo entre el ajuste y la complejidad del modelo. El término de penalización del número de parámetros en el AIC evita que el modelo se sobreajuste a los datos y selecciona el modelo más simple posible que aún pueda explicar los datos de manera efectiva.
+
+En resumen, el principio subyacente del AIC es encontrar un modelo que tenga un buen ajuste a los datos, pero que tenga un número mínimo de parámetros. El AIC se basa en la idea de que el modelo más probable es aquel que minimiza la información perdida al modelar los datos, y utiliza una medida combinada de la bondad de ajuste y la complejidad del modelo para seleccionar el mejor modelo de entre los modelos candidatos.
+
+$$
+AIC=2k-2ln(L)
+$$
+
+Donde $k$ es el número de parámetros en el modelo y $L$ es la función de verosimilitud máxima del modelo estimada a partir de los datos.
+
+El AIC se calcula como la suma de dos términos: el primer término, 2k, es una penalización por el número de parámetros en el modelo, mientras que el segundo término, $-2ln(L)$, es proporcional al negativo del logaritmo de la función de verosimilitud máxima del modelo. El modelo con el valor más bajo del AIC se considera el mejor modelo de entre los modelos candidatos.
+
+## Métodos por reducción de dimensionalidad
+
+### PCA-PCR
+
+El PCA (Principal Component Analysis) es una técnica estadística utilizada para reducir la dimensionalidad de los datos. El objetivo del PCA es encontrar una combinación lineal de variables predictoras (conocidas como componentes principales) que expliquen la mayor cantidad posible de la variación en los datos.
+
+En el PCA, se asume que la variación en los datos se debe a una combinación de variables predictoras y no a variables aleatorias. Por lo tanto, el PCA busca identificar las variables predictoras que contribuyen más a la variación en los datos y combinarlas para formar nuevas variables o componentes principales.
+
+La primera componente principal se elige de tal manera que tenga la mayor varianza posible, lo que significa que esta componente principal explica la mayor cantidad posible de la variación en los datos. Las componentes siguientes se eligen de tal manera que estén altamente correlacionadas con las variables predictoras originales, pero no estén correlacionadas con las componentes principales previamente seleccionadas.
+
+Una vez que se han identificado las componentes principales, se pueden utilizar para reducir la dimensionalidad de los datos al proyectar los datos originales sobre las componentes principales seleccionadas. Esto se puede hacer eliminando las componentes principales que contribuyen menos a la variación en los datos y conservando solo las componentes principales más importantes.
+
+El PCA se utiliza comúnmente en la exploración de datos y el análisis multivariado, particularmente en los casos en que hay muchas variables predictoras. También se utiliza en la clasificación y la agrupación de datos y en la visualización de datos en dos o tres dimensiones.
+
+En resumen, el PCA es una técnica estadística utilizada para reducir la dimensionalidad de los datos. El PCA busca identificar las variables predictoras que contribuyen más a la variación en los datos y combinarlas para formar nuevas variables o componentes principales. Las componentes principales se pueden utilizar para reducir la dimensionalidad de los datos proyectando los datos originales sobre las componentes principales seleccionadas.
+
+El PCR (Principal Component Regression) es un método de regresión que utiliza el PCA para reducir la dimensionalidad de los datos y luego realiza la regresión sobre las componentes principales seleccionadas. En lugar de utilizar todas las variables predictoras originales en la regresión, el PCR utiliza una combinación lineal de las componentes principales seleccionadas que mejor explique la variabilidad en la variable respuesta.
+
+En el PCR, se realizan tres pasos principales. En primer lugar, se realiza el PCA sobre las variables predictoras para identificar las componentes principales que explican la mayor cantidad de variación en los datos. En segundo lugar, se seleccionan un número limitado de componentes principales que se utilizarán en la regresión. En tercer lugar, se realiza la regresión utilizando las componentes principales seleccionadas.
+
+El objetivo del PCR es reducir la dimensionalidad de los datos para evitar el sobreajuste del modelo y mejorar la precisión de la regresión. El PCR se utiliza comúnmente en la regresión cuando hay muchas variables predictoras y es difícil identificar cuáles son las variables más importantes.
+
+El PCR tiene algunas ventajas en comparación con otros métodos de regresión, como la regresión lineal múltiple. En particular, el PCR puede ser útil cuando hay una alta correlación entre las variables predictoras, lo que puede causar problemas en la regresión lineal múltiple. Además, el PCR puede mejorar la estabilidad de la regresión al reducir la dimensionalidad de los datos.
+
+En resumen, el PCR es un método de regresión que utiliza el PCA para reducir la dimensionalidad de los datos y luego realiza la regresión sobre las componentes principales seleccionadas. El PCR se utiliza comúnmente en la regresión
+
+Stop generating
+
+### PLS
+
+El PLS (Partial Least Squares) es un método estadístico de regresión que busca establecer una relación lineal entre un conjunto de variables predictoras y una variable respuesta. El objetivo de PLS es encontrar una representación reducida de las variables predictoras, llamadas componentes latentes, que expliquen la mayor cantidad posible de variación en la variable respuesta.
+
+La idea principal del PLS es encontrar una combinación lineal de las variables predictoras que explique la mayor parte de la variación en la variable respuesta. Para lograr esto, PLS utiliza una técnica de descomposición en componentes principales que se enfoca en encontrar una relación lineal entre las variables predictoras y la variable respuesta.
+
+La técnica de PLS busca encontrar una representación reducida de los datos de entrada mediante la creación de un conjunto de componentes latentes. Estos componentes latentes son combinaciones lineales de las variables predictoras originales que están altamente correlacionadas con la variable respuesta. Cada componente latente se construye de manera que tenga la máxima covarianza posible con la variable respuesta y, al mismo tiempo, esté altamente correlacionado con las variables predictoras originales.
+
+La técnica de PLS se utiliza comúnmente en el análisis multivariado de datos, particularmente en la regresión de datos altamente correlacionados o cuando hay muchas variables predictoras en comparación con el número de observaciones disponibles. Además, PLS se puede utilizar para reducir la dimensionalidad de un conjunto de datos para su posterior análisis, así como para identificar las variables predictoras más importantes en un modelo de regresión.
+
+## Métodos de regularización
+
+La regularización en los métodos de regresión es una técnica utilizada para evitar el sobreajuste o la falta de generalización de un modelo de regresión. El sobreajuste ocurre cuando un modelo se ajusta demasiado bien a los datos de entrenamiento, lo que puede hacer que sea demasiado específico y no se generalice bien a nuevos datos. La regularización es una técnica que impone restricciones al modelo de regresión, con el objetivo de reducir la complejidad y evitar el sobreajuste.
+
+Existen diferentes tipos de regularización, como la regularización L1 (también conocida como LASSO), la regularización L2 (también conocida como Ridge) y la regularización Elastic Net, que combina ambas técnicas. Estas técnicas agregan una penalización a la función de costo del modelo de regresión, lo que permite controlar la complejidad del modelo y evitar el sobreajuste.
+
+La regularización es una técnica muy útil en el aprendizaje automático, especialmente en problemas de regresión donde se trabaja con grandes conjuntos de datos y se desea obtener modelos que sean generalizables y no sobreajustados a los datos de entrenamiento.
+
+La regularización L2 agrega una penalización a la función de costo del modelo de regresión que es proporcional al cuadrado de los coeficientes del modelo. Esta penalización reduce los coeficientes de las características menos relevantes, lo que significa que el modelo se centrará más en las características que son más importantes para la predicción.
+
+Una vez que se ha entrenado el modelo de regresión con la técnica de regularización L2, es posible utilizar los coeficientes resultantes para identificar las características más importantes. Estas características pueden seleccionarse y utilizarse para entrenar otro modelo, como un modelo de clasificación, por ejemplo.
+
+Es importante tener en cuenta que la selección de características debe realizarse con cuidado y que no siempre es adecuado utilizar solo las características más importantes para entrenar un modelo, ya que pueden perderse información importante. Por lo tanto, es recomendable realizar un análisis cuidadoso de las características antes de seleccionar las más relevantes.
+
+Si el modelo de regresión lineal es el siguiente:
+
+$$
+Y=X\beta+\epsilon
+$$
+
+La regularización L1 o Lasso intenta minimizar la siguiente ecuación
+
+$$
+\begin{equation}
+\text{min } \frac{1}{2n} \sum_{i=1}^{n}(y_i - \beta_0 - \sum_{j=1}^{p}x_{ij}\beta_j)^2 + \lambda\sum_{j=1}^{p}|\beta_j|
+\end{equation}
+$$
+
+La regularización L2 o ridge:
+
+$$
+\begin{equation}
+\text{min } \frac{1}{2n} \sum_{i=1}^{n}(y_i - \beta_0 - \sum_{j=1}^{p}x_{ij}\beta_j)^2 + \lambda\sum_{j=1}^{p}\beta_j^2
+\end{equation}
+$$
+
+La elastic net:
+
+$$
+\begin{equation}
+\text{min } \frac{1}{2n} \sum_{i=1}^{n}(y_i - \beta_0 - \sum_{j=1}^{p}x_{ij}\beta_j)^2 + \lambda_1\sum_{j=1}^{p}|\beta_j| + \lambda_2\sum_{j=1}^{p}\beta_j^2
+\end{equation}
+$$
+
+Los métodos de regularización como L1, L2 y Elastic Net no tienen una solución cerrada o analítica, y generalmente se utilizan métodos numéricos iterativos para encontrar los coeficientes óptimos del modelo.
+
+Estos métodos iterativos se basan en el principio de minimización del error cuadrático (o alguna otra medida de error) del modelo, junto con la función de regularización. Por ejemplo, el algoritmo de descenso de gradiente puede ser utilizado para optimizar la función objetivo de regresión con regularización.
+
+Además, es importante ajustar el parámetro de regularización $\lambda$ (o $\lambda_1$ y $\lambda_2$ en el caso de Elastic Net) para encontrar un equilibrio adecuado entre el ajuste del modelo y la regularización. Esto se puede hacer mediante la validación cruzada o mediante el uso de algoritmos de optimización más avanzados, como la búsqueda de cuadrícula o la optimización bayesiana.
+
+En resumen, se utilizan métodos iterativos y de optimización para encontrar la solución óptima en métodos de regularización, lo que hace que su implementación sea más compleja que en los métodos de regresión lineal sin regularización.
+
+El método de descenso de gradiente es un algoritmo iterativo de optimización utilizado para minimizar una función de costo. En el contexto de los métodos de regresión con regularización, esta función de costo se define como la suma del error cuadrático (o alguna otra medida de error) del modelo, junto con la función de regularización.
+
+El algoritmo de descenso de gradiente comienza con un valor inicial de los coeficientes del modelo, y en cada iteración actualiza los valores de los coeficientes en la dirección opuesta al gradiente de la función de costo. La idea es que al actualizar los coeficientes en esta dirección, se reducirá gradualmente el valor de la función de costo.
+
+El tamaño de los pasos que se dan en cada iteración se controla mediante un parámetro conocido como la tasa de aprendizaje. Si la tasa de aprendizaje es demasiado pequeña, el algoritmo puede converger lentamente, mientras que si es demasiado grande, puede no converger en absoluto. Por lo tanto, elegir una tasa de aprendizaje adecuada es importante para el éxito del algoritmo.
+
+El algoritmo de descenso de gradiente puede repetirse hasta que se alcanza un criterio de convergencia predefinido, como una tolerancia de error o un número máximo de iteraciones. Una vez que se alcanza la convergencia, se devuelve el valor óptimo de los coeficientes del modelo.
+
+# Métricas
+
+Existen varias métricas que se utilizan comúnmente para evaluar la rendición de los modelos, dependiendo del tipo de problema y del tipo de modelo utilizado. Aquí te presento algunas de las métricas más comunes:
+
+-   Error cuadrático medio (MSE): Esta métrica mide la media de los errores al cuadrado entre las predicciones del modelo y los valores reales de la variable respuesta. El MSE es muy utilizado en problemas de regresión.
+
+-   Coeficiente de determinación (R\^2): Esta métrica mide la proporción de la variabilidad en la variable respuesta que es explicada por el modelo. Un valor de R\^2 cercano a 1 indica que el modelo explica bien la variabilidad en la variable respuesta, mientras que un valor cercano a 0 indica que el modelo no es capaz de explicar la variabilidad. El R\^2 es muy utilizado en problemas de regresión.
+
+-   Exactitud (accuracy): Esta métrica mide la proporción de predicciones correctas del modelo en relación al total de predicciones. El accuracy es muy utilizado en problemas de clasificación.
+
+-   Precisión (precision) y recuperación (recall): Estas métricas se utilizan comúnmente en problemas de clasificación binaria para evaluar la calidad de las predicciones positivas del modelo. La precisión mide la proporción de predicciones positivas correctas en relación al total de predicciones positivas, mientras que la recuperación mide la proporción de instancias positivas que son correctamente clasificadas por el modelo.
+
+-   F1-score: Esta métrica combina la precisión y la recuperación en una única medida que se utiliza comúnmente en problemas de clasificación binaria.
+
+Cabe destacar que no hay una métrica única que sea la más utilizada para evaluar la rendición de los modelos, ya que la elección de la métrica depende del tipo de problema y del tipo de modelo utilizado. En general, se recomienda utilizar varias métricas para evaluar la rendición de los modelos y obtener una visión más completa del desempeño del modelo.
+
+$$
+\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+$$
+
+$$
+R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}i)^2}{\sum{i=1}^{n} (y_i - \bar{y})^2}
+$$
+
+# Práctica
+
+**De los datos `fat` del paquete `faraway`,utiliza el porcentaje de grasa,`siri`, como la respuesta, y las otras variables como independientes, excepto `brozek` y `density`. Quita una observación cada 10 del conjunto de datos para formar el conjunto de entrenamiento y el de prueba.**
+
+**Realiza los siguientes modelos:**
+
+1.  **Regresión múltiple lineal**
+2.  **Regresión múlitple seleccionando variables con AIC**
+3.  **PCR**
+4.  **PLS**
+5.  **Ridge**
+6.  **LASSO**
+
+### Cargamos librerías y carga de datos
+
+```{r}
+library(faraway)
+library(ggstatsplot)
+library(DescTools)
+library(corrplot)
+library(leaps)
+library(pls)
+library(MASS)
+library(glmnet)
+
+
+datos <- fat
+str(fat)
+```
+
+### Estadística descriptiva e inferencial
+
+Nos dice el enunciado que tenemos que quitar `brozek` y `density`
+
+```{r}
+X <- datos[,-c(1,3)]
+```
+
+El conjunto de datos lo constan 252 observaciones y 18 variables. Todas las variables son numéricas
+
+Realizamos pruebas de Jarque Bera para ver la normalidad de los datos
+
+```{r}
+w <- which(apply(X,2,function(x) JarqueBeraTest(x)$p.value)<0.05)
+length(w)
+
+```
+
+De las 16 variables, 11 no tienen normalidad.
+
+Procedemos a realizar la correlación entre las variables.
+
+Cómo tenemos variables que no siguen la normalidad tendríamos que hacer una prueba de **spearman**, pero como son bastantes observaciones la de **pearson** es más robusta
+
+```{r}
+correlacion <- cor(X,method = "pearson")
+corrplot::corrplot(correlacion)
+```
+
+Podemos observar, como muchas de las variables estan íntimamente correlacionadas, por lo tanto, a priori ya sabemos que nuestros modelos múltiples lineales simples, no serán buenos.
+
+Antes de empezar necesitamos escalar los datos
+
+```{r}
+X <- as.data.frame(scale(X))
+```
+
+### Partición de datos prueba y entrenamiento
+
+```{r}
+train <- X[-seq(10,252,10),]
+test <- X[seq(10,252,10),]
+```
+
+### Regresión lineal múltiple
+
+```{r}
+g  <- lm(siri ~.,data=train)
+summary(g)
+```
+
+Observamos, cómo 7 variables son las más importantes en el modelo. De hecho tenemos un R2 de casi el 97 %
+
+#### Predicción
+
+```{r}
+predlm  <- predict(g,test)
+
+```
+
+### Regresión lineal múltiple. Selección AIC
+
+Lo podemos plantear manualmente
+
+```{r}
+ conj <- regsubsets(siri ~., data=train, nvmax = 15)
+ rconj <- summary(conj)
+ n <- nrow(train)
+ p <- ncol(train[,-1]) + 1
+ aic <- n*log(rconj$rss/n)+(2:p)*2
+ plot(1:(p-1),aic,ylab="AIC",xlab="Número de predictores",axes=F)
+ box(); axis(1,at=1:(p-1)); axis(2)
+```
+
+El mínimo AIC se obtiene con
+
+```{r}
+which.min(aic)
+
+```
+
+pero con 7, 8 o 9 predictoras, el valor de AIC es similar.
+
+Si se utiliza la función `step()`, se minimiza el AIC con un modelo de 10 predictores
+
+```{r}
+lmaic <- step(g, trace = F)
+formula(lmaic)
+predaic <- predict(lmaic,test)
+```
+
+### PCR
+
+```{r}
+mpc <- pcr(siri ~., data=train, validation="CV")
+mpcCV <- RMSEP(mpc, estimate="CV")
+(numpredcp <- which.min(mpcCV$val))
+```
+
+En este caso el número de predictores seleccionados es de 7 (descontando el intercept).
+
+```{r}
+predcp <- predict(mpc, test, ncomp=numpredcp-1)
+```
+
+### Regresion por mínimos cuadrados parciales (PLS)
+
+```{r}
+set.seed(123456)
+mpls <- plsr(siri~., data=train, validation="CV")
+mplsCV <- RMSEP(mpls, estimate="CV")
+(numpredpls<-which.min(mplsCV$val) - 1)
+predpls <- predict(mpls,test,ncomp=numpredpls)
+```
+
+### Regresión contraída (RIDGE)
+
+```{r}
+mr <- lm.ridge(siri ~., data=datos, lambda=(seq(0,0.01,0.0001)))
+(nGCV <- which.min(mr$GCV))
+
+```
+
+```{r}
+set.seed(124568919)
+lGCV <- mr$lambda[nGCV]
+matplot(mr$lambda,coef(mr),type="l", ylim=c(-2,2),                 xlab=expression(lambda),ylab=expression(hatbeta[i]))
+abline(v=lGCV,col=2)
+```
+
+```{r}
+plot(mr$lambda,mr$GCV,type="l",xlab=expression(lambda),ylab="GCV")
+abline(v=lGCV,col=2)
+```
+
+```{r}
+ mr <- lm.ridge(siri~.,train, lambda=lGCV)
+ predridge <- cbind(1,as.matrix(test[,-1])) %*% coef(mr)
+```
+
+### Regresión LASSO
+
+```{r}
+#perform k-fold cross-validation to find optimal lambda value
+train.matrix <- as.matrix(train)
+X <- train.matrix[,-1]
+y <- train.matrix[,1]
+mod_cv <- cv.glmnet(x=X, y=y, family="gaussian",
+                        intercept = F, alpha=1)
+#find optimal lambda value that minimizes test MSE
+best_lambda <- mod_cv$lambda.min
+best_lambda
+
+
+#produce plot of test MSE by lambda value
+plot(mod_cv) 
+```
+
+```{r}
+test.matrix <- as.matrix(test)
+predlasso <- predict(mod_cv,test.matrix[,-1])
+```
+
+## Resumen
+
+```{r}
+ rmse <- function(x,y) sqrt(mean((x-y)^2))
+ rmse.lm <- rmse(predlm,test$siri)
+ rmse.aic <- rmse(predaic,test$siri)
+ rmse.cp <- rmse(predcp,test$siri)
+ rmse.pls <- rmse(predpls,test$siri)
+ rmse.ridge <- rmse(predridge,test$siri)
+ rmse.lasso <- rmse(predlasso,test$siri)
+ 
+ res <- data.frame(lm=rmse.lm,
+            aic=rmse.aic,
+            pcr = rmse.cp,
+            pls = rmse.pls,
+            ridge=rmse.ridge,
+            lasso=rmse.lasso)
+ 
+ res <- as.data.frame(t(round(res,4)))
+res
+```

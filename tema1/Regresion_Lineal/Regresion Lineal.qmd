@@ -188,7 +188,7 @@ shapiro.test(residuals(model))
 
 Hay una cierta desviación respecto a la normal, con las colas algo alargadas.
 
-#### Leverage 
+#### Leverage
 
 O influencia de los puntos
 
