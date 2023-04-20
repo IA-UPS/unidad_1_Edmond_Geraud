@@ -101,8 +101,7 @@ $$
 
 La elastic net:
 
-\$\$
-$$\text{min } \frac{1}{2n} \sum_{i=1}^{n}(y_i - \beta_0 - \sum_{j=1}^{p}x_{ij}\beta_j)^2 + \lambda_1\sum_{j=1}^{p}|\beta_j| + \lambda_2\sum_{j=1}^{p}\beta_j^2
+\$\$ $$\text{min } \frac{1}{2n} \sum_{i=1}^{n}(y_i - \beta_0 - \sum_{j=1}^{p}x_{ij}\beta_j)^2 + \lambda_1\sum_{j=1}^{p}|\beta_j| + \lambda_2\sum_{j=1}^{p}\beta_j^2
 $$
 
 Los métodos de regularización como L1, L2 y Elastic Net no tienen una solución cerrada o analítica, y generalmente se utilizan métodos numéricos iterativos para encontrar los coeficientes óptimos del modelo.

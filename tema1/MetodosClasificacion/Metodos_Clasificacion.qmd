@@ -1,0 +1,241 @@
+---
+title: "Métodos de Clasificación"
+author: "MsC. Edmond Géraud"
+format: pdf
+editor: visual
+toc: true
+toc-depth: 4
+---
+
+# Clasificación en ML
+
+Los métodos de clasificación son técnicas de aprendizaje automático que se utilizan para predecir la clase a la que pertenece un objeto o un conjunto de datos. Estos métodos son muy útiles para una amplia variedad de aplicaciones, como el reconocimiento de imágenes, el procesamiento del lenguaje natural, la detección de fraudes y la clasificación de correos electrónicos no deseados, así como por ejemplo detección, y diagnosis de enfermedades
+
+Algunos de los métodos de clasificación más comunes en aprendizaje automático son:
+
+1.  Árboles de decisión: es un método de aprendizaje supervisado que se utiliza para predecir la clase de un objeto mediante la construcción de un árbol de decisiones.
+
+2.  Regresión logística: es un método estadístico que se utiliza para predecir la probabilidad de que un objeto pertenezca a una clase determinada.
+
+3.  Máquinas de vectores de soporte (SVM): es un método de aprendizaje supervisado que se utiliza para clasificar objetos mediante la construcción de un hiperplano que separe las clases.
+
+4.  Redes neuronales artificiales: es un método de aprendizaje profundo que utiliza redes de neuronas para clasificar objetos.
+
+5.  Naïve Bayes: es un método estadístico que se basa en el teorema de Bayes para predecir la clase de un objeto.
+
+6.  PLS-DA (Partial Least Squares Discriminant Analysis) es otro método de clasificación que se utiliza comúnmente en la minería de datos y el análisis multivariado. PLS-DA es una técnica que combina el análisis discrimnante mediante regresión por mínimos cuadrados parciales.
+
+    PLS-DA se utiliza típicamente cuando se tiene un conjunto de datos con múltiples variables independientes (características o variables explicativas) y se desea clasificar los datos en diferentes categorías (clases). PLS-DA busca identificar una combinación lineal de las variables independientes que mejor discrimina entre las diferentes categorías, de modo que los datos puedan ser clasificados en función de esta combinación lineal.
+
+Cada uno de estos métodos tiene sus propias ventajas y desventajas, y su elección dependerá de la naturaleza del problema de clasificación y del conjunto de datos utilizado. Además, existen otros métodos de clasificación que se están utilizando en la actualidad y que son objeto de investigación constante en la comunidad de aprendizaje automático.
+
+En la práctica, cada método posee ventajas en cuanto al análisis pero con el fin de observar cuál es mejor, de igual manera recurrimos a ciertas métricas.
+
+## Métricas en clasificación
+
+Las métricas de clasificación son medidas que se utilizan para evaluar el rendimiento de un modelo de clasificación. Estas métricas se calculan comparando las predicciones del modelo con las etiquetas reales de las muestras de datos.
+
+Algunas de las métricas de clasificación más comunes son:
+
+1.  Exactitud (Accuracy): es la proporción de muestras correctamente clasificadas por el modelo.
+
+2.  Precisión (Precision): es la proporción de muestras clasificadas como positivas por el modelo que son realmente positivas.
+
+3.  Sensibilidad (Recall o True Positive Rate): es la proporción de muestras positivas que son correctamente identificadas como positivas por el modelo.
+
+4.  Especificidad (Specificity o True Negative Rate): es la proporción de muestras negativas que son correctamente identificadas como negativas por el modelo.
+
+5.  F1-score: es una medida que combina la precisión y la sensibilidad en una sola métrica.
+
+Además de estas métricas, también existen otras medidas como el AUC-ROC (área bajo la curva ROC) que se utilizan para evaluar el rendimiento de un modelo de clasificación. La elección de la métrica adecuada dependerá del problema de clasificación y del conjunto de datos utilizado
+
+# ¿Qué veremos?
+
+En esta sesión intentaremos entender tanto la regresión logística como el PLS-DA. Y si nos da tiempo la regresión logística con regularización.
+
+## Regresión Logística (teoría básica)
+
+La regresión logística modela una relación entre variables predictoras y una variable de respuesta categórica.
+
+Por ejemplo, después de cierto procesado en unas imágenes histológicas, podríamos predecir si se tiene cierta condición, como por ejemplo, leuceima o sin leucemia. Otro ejemplo, si tenemos ciertas variables clínicas las cuales están asociadas a cierta condición de salud, de forma categórica también podríamos realizar dicho análisis.
+
+Ahora bien, cabe resaltar que este análisis es **supervisado**, quiere decir, que debemos de tener *marcada* la variable respuesta. Lo contrario que sucede con por ejemplo el análisis de componentes prinicipales, el cuál *tan solo nos sirve* para visualizar en una dimención reducida algomeraciones de datos.
+
+No obstante no solamente se puede utilizar una técnica, se pueden mezclar varias para producir el resultado deseado. Me explico, supongamos que estamos estudiando el metabolismo, y estamos interesados, en cómo afecta el alcohol al sexo. No obstante no tenemos marcado el sexo, ni el consumo del alcohol. En una primera instancia, se podría realizar un PCA, y con téncnicas no supersiadas, como lo sería k-means, podríamos encontrar aglormeraciones entre los pacientes. Ahora bien, este es un tipo de información y una vez obtenidos dichos conglormerados, se podría aplicar por ejemplo la regresión logística, sobre los datos originales, que han sido *marcados* con téncias no supervisadas de ML, para observar las "diferencias" entre los metabolitos respeco al sexo y al consumo del alcohol.
+
+Es decir, La regresión logística nos ayuda a estimar una probabilidad de caer en un determinado nivel de la respuesta categórica dado un conjunto de predictores. Podemos elegir entre tres tipos de regresión logística, dependiendo de la naturaleza de la variable de respuesta categórica:
+
+1.  **Regresión logística binaria:**
+
+Se utiliza cuando la respuesta es binaria (es decir, tiene dos resultados posibles). El ejemplo de cáncer / no cancer, o responder en un examen, sí o no, en una encuesta, o predecir si se tiene la presión arterial alta o baja.
+
+2.  **Regresión logística nominal:**
+
+Se utiliza cuando hay tres o más categorías sin un orden natural de los niveles. Ejemplos de respuestas de una empresa de una empresa (p. ej., marketing, ventas, RRHH), el tipo de motor de búsqueda utilizado (por ejemplo, Google, Yahoo!, MSN) y el color (negro, rojo, azul, naranja).
+
+3.  **Regresión logística ordinal:**
+
+Se utiliza cuando hay tres o más categorías con una ordenación natural de los niveles, pero la clasificación de los niveles no significa necesariamente que los intervalos entre ellos sean iguales. Ejemplos de respuestas ordinales podrían ser cómo califican los estudiantes la eficacia de un curso universitario en una escala del 1 al 5, niveles de sabores de las alitas picantes, y estado de salud (por ejemplo, bueno, estable, grave, crítico).
+
+Los problemas particulares de la regresión logística incluyen términos de error no normales, varianza de error no constante y restricciones en la función de respuesta (es decir, la respuesta está limitada entre 0 y 1).
+
+Investigaremos formas de tratar estos temas solamente en la **regresión logística binaria**, aunque el concepto se puede ampliar a los demás tipos.
+
+## Regresión logística binaria
+
+El modelo de regresión múltiple logístico es el siguiente:
+
+$$
+P(Y = 1|X_1, X_2, ..., X_p) =\pi= \frac{1}{1+e^{-(\beta_0 + \beta_1X_1 + \beta_2X_2 + ... + \beta_pX_p)}}
+$$
+
+$$
+=\frac{e^{-(\beta_0 + \beta_1X_1 + \beta_2X_2 + ... + \beta_pX_p)}}{1+e^{-(\beta_0 + \beta_1X_1 + \beta_2X_2 + ... + \beta_pX_p)}}
+$$
+
+$$
+=\frac{e^{(X\beta)}}{1+e^{(X\beta}} = \frac{1}{1+e^{-X\beta}}
+$$
+
+Tal que $\pi$ denota la probabilidad y no el número. Es decir, es la probabilidad de éxito dados los predictores. Es decir, nos dice la probabilidad de un evento, no que este ocurra o no. Si se fijan, el modelo es el mismo que el lineal, tan solo que lo tenemos arreglado en una fracción.
+
+De hecho, de las ecuaciones anteriores, podemos calcular la función de verosimilitud, es una función que describe la probabilidad de observar un conjunto de datos específico dado un modelo estadístico y un conjunto de parámetros. En otras palabras, la función de verosimilitud mide la capacidad de un modelo para explicar los datos observados en términos de la distribución de probabilidad de las variables involucradas.
+
+En el contexto de la regresión logística, la función de verosimilitud se utiliza para estimar los coeficientes de regresión que mejor se ajustan a los datos observados. La función de verosimilitud de la regresión logística multivariante es el producto de las probabilidades condicionales de las muestras de datos para cada conjunto de valores de las variables independientes.
+
+Matemáticamente, la función de verosimilitud se define como:
+
+$$
+L(\beta_0, \beta_1, ..., \beta_p) = \prod_{i=1}^n P(Y_i|X_{i1}, X_{i2}, ..., X_{ip}; \beta_0, \beta_1, ..., \beta_p)
+$$
+
+Donde:
+
+-   $L(\beta_0, \beta_1, ..., \beta_p)$ es la función de verosimilitud para los parámetros \$\\beta_0, \\beta_1, \..., \\beta_p\$
+
+-   $P(Y_i|X_{i1}, X_{i2}, ..., X_{ip}; \beta_0, \beta_1, ..., \beta_p)$ es la probabilidad condicional de que la i-ésima muestra tenga una etiqueta $Y_i$ dada su combinación de variables independientes $X_{i1}, X_{i2}, ..., X_{ip}$ y los parámetros $\beta_0, \beta_1, ..., \beta_p$
+
+-   $n$ es el número total de muestras de datos
+
+El objetivo de la regresión logística es encontrar los valores óptimos de los coeficientes $\beta_0, \beta_1, ..., \beta_p$ que maximizan la función de verosimilitud. Esto se logra mediante técnicas de optimización como el gradiente descendente o la regresión de máxima verosimilitud.
+
+Es decir, si con el algoritmo de gradiente descendiente que se utilizaba para las regresiones múltiples con penalización se buscaba el mínimo. Con esta se enceuntra el máximo.
+
+### Veamos con un ejemplo
+
+Para ilustrarlo, consideremos los datos publicados sobre n = 27 pacientes con leucemia. Los datos (leucemia_remisión.txt) tienen una variable de respuesta de si se produjo la remisión de la leucemia, que viene dada por un 1.
+
+Las variables predictoras son la celularidad de la célula de la sección del coágulo de médula, el porcentaje diferencial de frotis de blastocitos, porcentaje de infiltrado absoluto de células leucémicas en la médula ósea, índice de etiquetado porcentual de las células leucémicas de la médula ósea li, número absoluto de blastos en la sangre periférica blastos, y la mayor temperatura antes del inicio del tratamiento temp.
+
+***Cargamos los datos y realizamos la regresión logística***
+
+```{r}
+remission <-
+  read.table(
+    "./data/leukemia_remission.txt",
+    sep = "",
+    skip = 1,
+    header = T,
+    row.names = 1
+  )
+lrmodel.full <-
+  glm(
+    remiss ~ cell + smear + infil + li + blast + temp,
+    family = binomial(link = "logit"),
+    data = remission
+  )
+summary(lrmodel.full)
+```
+
+## La prueba de Wald
+
+La prueba de Wald, mira significancia de los coeficientes individuales en la regresión logística, sería un símil a los t-test que se utilizan en regresión lineal. Para los estimados de la función de máxima verosmilitud, el ratio.
+
+$$
+Z= \frac{\hat{\beta_i}}{s.e(\hat{\beta_i)}}
+$$
+
+Donde la hipótesos nula, es que los coeficientes son cero. Es decir los estimados no aportan nada al modelo $H_0: \beta_i=0$ . Donde se utiliza la distribución estándar (es decir la gausiana, con media cero), para determinar el p-valor del test. Además, los intervalos de confianza se puede construir de la siguiente manera.
+
+$$
+\hat{\beta_i} \pm z_{1-\alpha/2}s.e(\hat{\beta_i})
+$$
+
+Es decir, en el modelo
+
+```{r,warning=F}
+confint(lrmodel.full)
+```
+
+De igual manera, podemos realizar una selección de variables con el criterio AIC
+
+```{r}
+lrmodel.step <- step(lrmodel.full)
+```
+
+```{r}
+summary(lrmodel.step)
+```
+
+Encontramos que solamente la variable li, es la importante como predictora.
+
+```{r}
+lrmodel.reduced <- glm(remiss ~ li, family = binomial(link = "logit"), data = remission)
+summary(lrmodel.reduced)
+```
+
+Donde la ecuación de la regresión es la siguiente:
+
+$$
+P(1) = exp(Y')/(1+exp(Y') \\
+Y' = 3.78+2.90\times li
+$$
+
+Como solamente tenemos un único predictor en este modelo, podemos visualizar la forma sigmoidal de la regresión.
+
+```{r}
+attach(remission)
+plot(li, remiss, xlab = "Labeling index", ylab = "Probability of leukemia remission")
+curve(predict(lrmodel.reduced, data.frame(li = x), type = "resp"),
+      lty = 1.5,
+      add = TRUE)
+points(li, fitted(lrmodel.reduced), pch = 20) # opcional
+```
+
+## Los Odds, Log Odds, y Odds ratio
+
+El término "odds" en estadística y en el contexto de la regresión logística se refiere a la relación entre la probabilidad de que ocurra un evento y la probabilidad de que no ocurra. En otras palabras, los odds representan la proporción de eventos exitosos frente a los eventos no exitosos.
+
+En la regresión logística, los odds se utilizan para modelar la probabilidad de que una variable dependiente binaria (por ejemplo, una variable que toma valores 0 o 1) esté presente o ausente
+
+Existen diversas maneras de escribir la regresión logística, por ejemplo la primera es.
+
+$$
+\frac{\pi}{1-\pi} = exp(\beta_0+\beta_1x_1+\cdots+\beta_{p-1}x_{p-1})
+$$
+
+Que es una ecuación, la cual describe la relación entre que ocurra un evento y no ocurra. Donde $\pi$ es la probabilidad de que ocurra el evento. Es decir, si estamos apostando a una carrera de caballos, por uno en especial gane la carrera, con una probabilidad del 80 porciento, el ***odds***, sería $0.80/(1-0.80) = 4$ es decir $4:1$
+
+La seguna opción es la siguiente:
+
+$$
+log(\frac{\pi}{1-\pi}) = \beta_0+\beta_1x_1+\cdots+\beta_{p-1}x_{p-1}
+$$
+
+Donde básicamente esta representación nos dice que el logaritmo natural de los datos, es una función lineal de los datos, y se le conoce como ***log odds.*** A esto se le conoce como la ***transformación logit*** de la probabilibad de éxito de $\pi$
+
+Por otro lado, el ***odds ratio*** que lo denominaremos como $\theta$ entre los odds de dos predictores, por ejempmplo $X_{(1)}$ y $X_{(2)}$ es dado por :
+
+$$
+\theta=\frac{((\pi/(1-\pi))|x=X_{(1)}}{((\pi/(1-\pi))|x=X_{(2)}}
+$$
+
+Por otra parte, para una regresión logística los odds de éxito son:
+
+$$
+\frac{\pi}{1-\pi} = exp(X\beta)
+$$
+
+Es decir, si arreglamos esta ecuación con la anterior, podemos establecer la relación entre el predictor y la respuesta. El odds ratio tiene que ser cualquier número no negativo.
+
+Para
