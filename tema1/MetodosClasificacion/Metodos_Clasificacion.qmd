@@ -238,4 +238,89 @@ $$
 
 Es decir, si arreglamos esta ecuación con la anterior, podemos establecer la relación entre el predictor y la respuesta. El odds ratio tiene que ser cualquier número no negativo.
 
-Para
+Por ejemplo, cuando solo hay un predictor , $X$ las odds de éxito son
+
+$$
+\frac{\pi}{1-\pi} = exp(\beta_0+\beta_1X)
+$$
+
+De manera que si incrementamos X por una unidad se convierte en:
+
+$$
+\theta = \frac{exp(\beta_0+\beta_1(X+1)}{exp(\beta_0+beta_1X)}=exp(\beta_1)
+$$
+
+Por ejemplo, el odds ratio para `li` se calcula como $exp(2.89726)$
+
+```{r}
+exp(summary(lrmodel.reduced)$coefficients["li",1])
+```
+
+También podemos calcular el intervalo de confianza al 95 porciento como:
+
+```{r}
+exp(summary(lrmodel.reduced)$coefficients["li",1]) +qnorm(c(0.025,0.5,0.975)) * summary(lrmodel.reduced)$coefficients["li",2]
+```
+
+La interpretación del odds ratio es que para cada un incremento de una unidad en `li` el estimado de odds para la recurrencia de la luecemia, está multiplicada por 18.1245. SIn embargo, `li` aparece caer entre 0 y 2, por lo que tendría más sentido decir que para cada incremento en $0.1$ unidades en `li`, el estimado de los odds remission esta multiplicada por $exp(2.89726\times 0.1) = 1.336$. Entonces,
+
+## Más cosas ...
+
+En realidad, cuando estamos tratando con una gran cantidad de datos, no sería necesario comprobar los supuestos, que básicamente serían los mismos que los de la regresión multivariada. No obstante, es una buena práctica hacerlo.
+
+# Práctica
+
+```{r}
+library(nnet)
+library(caret)
+set.seed(123156)
+datos  <- read.csv("./data/BreastTissue.csv")
+datos$Class <- as.factor(datos$Class)
+datos[,-1] <- scale(datos[,-1])
+idx <- sample(1:nrow(datos),size = nrow(datos)*0.7,replace = F)
+train <- datos[idx,]
+test <- datos[-idx,]
+
+mdl <- multinom(Class ~ ., data = train)
+
+```
+
+```{r}
+res <- predict(mdl,test)
+```
+
+```{r}
+confusionMatrix(test$Class,res)
+```
+
+```{r}
+set.seed(23)
+ctrl <-
+  trainControl(
+    method = "repeatedcv",
+    number = 10,
+    classProbs = TRUE,
+    summaryFunction = multiClassSummary
+  )
+mdl <- train(
+  x = train[,-1],
+  # spectral data
+  y = train$Class,
+  # factor vector
+  method = "pls",
+  # pls-da algorithm
+  tuneLength = 10,
+  # number of components
+  trControl = ctrl,
+  # ctrl contained cross-validation option
+  preProc = c("center", "scale"),
+  # the data are centered and scaled
+  metric = "Accuracy"
+) # metric is ROC for 2 classes
+plsda
+```
+
+```{r}
+res <- predict(mdl,test)
+confusionMatrix(test$Class,res)
+```
