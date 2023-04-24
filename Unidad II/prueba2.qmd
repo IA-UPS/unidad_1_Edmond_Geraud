@@ -14,6 +14,8 @@ When you click the **Render** button a document will be generated that includes 
 
 ```{r}
 library(ggplot2)
+library(ggpubr)
+library(dplyr)
 ```
 
 You can add options to executable code like this
@@ -27,7 +29,7 @@ The `echo: false` option disables the printing of code (only output is displayed
 
 ```{r}
 
-datos <- read.table("./Unidad II/yeast.data",header = F)[,-1]
+datos <- read.table("./yeast.data",header = F)[,-1]
 ```
 
 ```{r}
@@ -35,28 +37,40 @@ min.max.mean <- function(X) apply(X,2,function(x) (x-mean(x))/(max(x)-min(x)))
 min.max.median <- function(X) apply(X,2,function(x) (x-median(x))/(max(x)-min(x)))
 min.max <- function(X) apply(X,2,function(x) (x-min(x))/(max(x)-min(x)))
 zscore <- function(X) apply(X,2,function(x) (x-mean(x))/sd(x))
-l2 <- function(X) apply(X,2,function(x) x/sqrt(sum(x^2)))
+l2 <- function(X) apply(X,2,function(x) x/sqrt(sum(x^2))) 
 
-datos.mean <- cbind(min.max.mean(datos[,-ncol(datos)]),datos[,ncol(datos)])
+datos.mean <- as.data.frame(bind_cols(min.max.mean(datos[,-ncol(datos)]),datos[,ncol(datos)]))
 
-datos.median <- cbind(min.max.median(datos[,-ncol(datos)]),datos[,ncol(datos)])
+datos.median <- as.data.frame(bind_cols(min.max.median(datos[,-ncol(datos)]),datos[,ncol(datos)]))
 
-datos.minmax <- cbind(min.max(datos[,-ncol(datos)]),datos[,ncol(datos)])
+datos.minmax <- as.data.frame(bind_cols(min.max(datos[,-ncol(datos)]),datos[,ncol(datos)]))
 
-datos.zscore <- cbind(zscore(datos[,-ncol(datos)]),datos[,ncol(datos)])
+datos.zscore <- as.data.frame(bind_cols(zscore(datos[,-ncol(datos)]),datos[,ncol(datos)]))
 
-datos.l2 <- cbind(l2(datos[,-ncol(datos)]),datos[,ncol(datos)])
+datos.l2 <- as.data.frame(bind_cols(l2(datos[,-ncol(datos)]),datos[,ncol(datos)]))
+
+datos.mean$V9 <- as.factor(datos.mean$V9)
+datos.median$V9 <- as.factor(datos.median$V9)
+datos.minmax$V9 <- as.factor(datos.minmax$V9)
+datos.l2$V9 <- as.factor(datos.l2$V9)
+datos.zscore$V9 <- as.factor(datos.zscore$V9)
 
 
 ```
 
 ```{r}
-datos <- as.data.frame(datos)
-datos$V10 <- as.factor(datos$V10)
-p1 <- ggplot(datos,aes(y=V2,color=V10))+geom_boxplot()
-p1 <- ggplot(,aes(y=V2,color=V10))+geom_boxplot()
-p1 <- ggplot(datos,aes(y=V2,color=V10))+geom_boxplot()
-p1 <- ggplot(datos,aes(y=V2,color=V10))+geom_boxplot()
-p1 <- ggplot(datos,aes(y=V2,color=V10))+geom_boxplot()
+colnames(datos)[ncol(datos)] <- "clase"
 
+colnames(datos.l2)[ncol(datos)] <- "clase"
+colnames(datos.mean)[ncol(datos)] <- "clase"
+colnames(datos.median)[ncol(datos)] <- "clase"
+colnames(datos.minmax)[ncol(datos)] <- "clase"
+
+p1 <- ggplot(datos,aes(y=V2,color=clase))+geom_boxplot()
+p2 <- ggplot(datos.l2,aes(y=V2,color=clase))+geom_boxplot()
+p3 <- ggplot(datos.mean,aes(y=V2,color=clase))+geom_boxplot()
+p4 <- ggplot(datos.median,aes(y=V2,color=clase))+geom_boxplot()
+p5 <- ggplot(datos.minmax,aes(y=V2,color=clase))+geom_boxplot()
+
+ggarrange(p1,p2,p3,p4,p5)
 ```
