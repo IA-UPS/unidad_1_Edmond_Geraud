@@ -1,0 +1,498 @@
+---
+title: "Procesado de datos II e introducción a R"
+format: pdf
+editor: visual
+params:
+  data: "./data"
+---
+
+# Clases de objetos
+
+## Vectores
+
+```{r}
+(x <- c(1,4,2,42,4))
+class(x)
+(y <- c(1,3,"ch",2,2))
+class(y)
+y[3]
+y[-3]
+
+
+```
+
+## Factores
+
+```{r}
+
+(mifactor <- rep(c("A","B"),each=4))
+mifactor
+class(mifactor)
+(mifactor <- as.numeric(mifactor))
+(mifactor2 <- as.factor(rep(c("A","B","C"),each=5)))
+
+mifactor2  <- mifactor2[mifactor2!="C"]
+
+(mifactor2 <- as.factor(as.character(mifactor2)))
+
+```
+
+## Matrices
+
+```{r}
+(X <- rnorm(25,mean = 0,sd=1))
+(X <- matrix(X,byrow = T,ncol=5))
+(X.t <- t(X))
+
+(Y <- matrix(rnorm(20,mean=0,sd=4),ncol = 2))
+
+dim(Y)
+Y.t <- t(Y)
+dim(Y.t)
+dim(Y)
+(multi <- Y.t %*% Y)
+colnames(multi) <- c("A","B")
+rownames(multi) <- c("pepe","juan")
+multi
+multi[,2]
+multi[1,]
+multi[1,2]
+multi[-2,]
+multi[,-2]
+```
+
+## Data frames
+
+```{r}
+(midf2 <- as.data.frame(multi))
+
+(midf3 <- data.frame(A=c("conejo","oso","pepe"),
+                     B=as.factor(c("A","A","B")),
+                     C=c(1,52,2)))
+
+midf3$A
+
+colnames(midf3) <- c("papa","chaucha","monaguillo")
+midf3
+```
+
+## Listas
+
+```{r}
+(milista <- as.list(midf3))
+milista$papa
+
+lista <- list(prueba1=c(2,4,2,1),
+              prueba2 = c("ch","cjo"),
+              prueba5 = as.factor(c("A","A","B","B")))
+
+lista$preueba1
+lista[[1]]
+```
+
+# Lectura de datos y documetnos dinámicos en Quarto/Rmarkdown
+
+Archivos de texto plano
+
+**.csv**
+
+```{r}
+list.files("./data/")
+
+```
+
+```{r}
+list.files("./data",pattern = ".csv")
+```
+
+```{r}
+tejido_cancer.archivo <- list.files("./data/",pattern = ".csv",full.names = T)
+tejido_cancer.datos <- read.csv(tejido_cancer.archivo)
+head(tejido_cancer.datos,3)[,1:4] ## no empieza en 0 !!
+```
+
+```{r}
+tejido.txt <- list.files("./data/",pattern = ".txt",full.names = T)
+tejido.data <- read.table(tejido.txt,skip=1)
+head(tejido.data)
+```
+
+```{r}
+library(xlsx)
+tejido <- read.xlsx(file = "./data/BreastTissue.xls",sheetIndex = 2)
+
+
+```
+
+```{r}
+datos.param <- read.csv(list.files(params$data,pattern = ".csv",full.names = T))
+```
+
+mis datos tienen `r dim(datos.param)`
+
+Ahora vamos leer archivos arrf, es lo bueno que tiene R que no se necesitan programas especiales para leer archivos complejos
+
+Primero de todo necesitamos cargar las librerías necesarias
+
+```{r}
+library(dplyr) # Facil manipulacion de data frames
+library(ggplot2)# Graficos
+library(knitr)
+library(ggpubr)
+library(car)
+
+```
+
+1.  Antes, de leer los datos, necesitamos saber que extensión son para proceder con la lectura, es decir, si son .csv, .txt, u otro formato.
+
+```{r}
+
+archivo <- list.files(params$data,
+                      pattern = "*.arff",
+                      full.names = T,recursive = T)
+# file.show(archivo)
+```
+
+Podemos osbervar, como en realidad, es un archivo de texto, denominado arff. No obstante, tenemos que convertir dicho archivo a un data frame para poder manejarlo en R.
+
+Leemos el archivo por líneas. E imprimimos por pantalla las primeras líneas:
+
+```{r}
+predata <- readLines(archivo)
+print(head(predata))
+
+```
+
+Ahora obtenemos solamente la cabecera, la cual está compuesta del símbolo arroba
+
+```{r}
+filas_cabecera <- grep("@",predata)
+cabecera <- predata[filas_cabecera]
+print(cabecera)
+
+```
+
+Si hacemos un indexado negativo de la cabecera, tenemos los datos crudos
+
+```{r}
+predatos <- predata[-filas_cabecera]
+head(predatos)
+## convertimos a matriz para extraer el nombre
+```
+
+Ahora extraemos del archivo de texto plano, aquellas filas que empiecen con `"@attribute"`. Esto nos dice el nombre y el tipo de datos con los que tenemos que trabajar, al igual que la mayoría del significado de las columnas.
+
+```{r}
+filas_cabecera <- grep("@attribute",predata)
+
+pre_columnas <- predata[filas_cabecera]
+print(pre_columnas)
+```
+
+Tenemos 17 columnas...Observamos, como los datos, estan separados por un espacio, vamos a transformar la salida anterior en una matriz de caracteres. Para ello utilizamos la función `strsplit`. Esta función nos devuelve una lista de las separaciones.
+
+```{r}
+pre_columnas.list <- strsplit(predata[filas_cabecera]," ")
+print(length(pre_columnas.list))
+```
+
+Tenemos `r print(length(pre_columnas.list))` efectivamente. Ahora necesitamos manipular la lista para convertira el una matriz de 17X3. No obstante antes, de manipular debemos de pasar la lista a un string.
+
+```{r}
+pre_columnas.unlist <- unlist(pre_columnas.list)
+#convertimos a matriz
+cabecera.raw <- matrix(pre_columnas.unlist,nrow=length(pre_columnas.list),
+                   ncol=3,byrow = T)
+head(cabecera.raw)
+```
+
+De la cabecera nos importan la segunda y la tercera columna que son las que tienen información
+
+```{r}
+cabecera  <- cabecera.raw[,2:3]
+## tambien la podemos convertir a data frame.
+cabecera <- as.data.frame(cabecera)
+colnames(cabecera) <- c("Variable","Clase")
+cabecera
+```
+
+Ya tenemos la cabecera, ahora vamos por los datos. Si recordamos lo habíamos guardado en la variable `predatos`. Tambiién habíamos observado que estaban separados por comas. Por lo tanto procedemos a separarlos por dicho caracter, y a parte, sabemos que los datos se componen `r nrow(cabecera)` columnas. Especificamos que se ordenen por filas, mediante el comando `byrow=T`.
+
+```{r}
+datos <-
+  as.data.frame(matrix(
+    unlist(strsplit(predatos, ",")),
+    ncol = nrow(cabecera),
+    byrow = T
+  ))
+colnames(datos) <- cabecera$Variable
+head(datos)
+```
+
+## Preprocesado de datos
+
+En este paso, necesitamos identificar qué variables son numéricas y cuales son factores.
+
+```{r}
+str(datos)
+```
+
+Todas están catalogadas como caracter. Bien podemos ir variable por variable y asignar la clase a la que corresponde, o podemos realizar lo siguiente.
+
+```{r}
+vars.numericas <- grep("numeric",cabecera$Clase)
+datos[,vars.numericas]<- apply(datos[,vars.numericas]
+                               , 2, 
+                               as.numeric)
+datos[,-vars.numericas] <- lapply(datos[,-vars.numericas],
+                                 as.factor)
+str(datos)
+```
+
+Ahora bien, también podemos realizar una función con los pasos anteriores.
+
+La siguiente función hace lo mismo que el código anterior, asignando a las variables la clase que corresponde.
+
+```{r}
+read.arff <- function(file_name){
+  archivo <- readLines(file_name)
+  
+  filas_cabecera <- grep("@attribute", predata)
+  
+  pre_columnas <- predata[filas_cabecera]
+  pre_columnas.list <- strsplit(predata[filas_cabecera], " ")
+  cabecera  <- cabecera.raw[, 2:3]
+  cabecera <- as.data.frame(cabecera)
+  colnames(cabecera) <- c("Variable", "Clase")
+  datos <-
+    as.data.frame(matrix(
+      unlist(strsplit(predatos, ",")),
+      ncol = nrow(cabecera),
+      byrow = T
+    ))
+  colnames(datos) <- cabecera$Variable
+  datos <- as.data.frame(datos)
+  numericas <- grep("numeric",cabecera$Clase)
+  datos[,numericas] <- lapply(datos[,numericas],as.numeric)
+  datos[,-numericas] <- lapply(datos[,-numericas],as.factor)
+
+  
+  return(datos)
+  
+}
+```
+
+```{r}
+datos  <- read.arff(archivo)
+str(datos)
+```
+
+# Primero de todo necesitamos cargar las librerías necesarias
+
+```{r}
+library(dplyr) # Facil manipulacion de data frames
+library(ggplot2)# Graficos
+library(knitr)
+library(ggpubr)
+library(car)
+
+```
+
+1.  Antes, de leer los datos, necesitamos saber que extensión son para proceder con la lectura, es decir, si son .csv, .txt, u otro formato.
+
+```{r}
+
+archivo <- list.files(params$data,
+                      pattern = "*.arff",
+                      full.names = T,recursive = T)
+# file.show(archivo)
+```
+
+Podemos osbervar, como en realidad, es un archivo de texto, denominado arff. No obstante, tenemos que convertir dicho archivo a un data frame para poder manejarlo en R.
+
+Leemos el archivo por líneas. E imprimimos por pantalla las primeras líneas:
+
+```{r}
+predata <- readLines(archivo)
+print(head(predata))
+
+```
+
+Ahora obtenemos solamente la cabecera, la cual está compuesta del símbolo arroba
+
+```{r}
+filas_cabecera <- grep("@",predata)
+cabecera <- predata[filas_cabecera]
+print(cabecera)
+
+```
+
+Si hacemos un indexado negativo de la cabecera, tenemos los datos crudos
+
+```{r}
+predatos <- predata[-filas_cabecera]
+head(predatos)
+## convertimos a matriz para extraer el nombre
+```
+
+Ahora extraemos del archivo de texto plano, aquellas filas que empiecen con `"@attribute"`. Esto nos dice el nombre y el tipo de datos con los que tenemos que trabajar, al igual que la mayoría del significado de las columnas.
+
+```{r}
+filas_cabecera <- grep("@attribute",predata)
+
+pre_columnas <- predata[filas_cabecera]
+print(pre_columnas)
+```
+
+Tenemos 17 columnas...Observamos, como los datos, estan separados por un espacio, vamos a transformar la salida anterior en una matriz de caracteres. Para ello utilizamos la función `strsplit`. Esta función nos devuelve una lista de las separaciones.
+
+```{r}
+pre_columnas.list <- strsplit(predata[filas_cabecera]," ")
+print(length(pre_columnas.list))
+```
+
+Tenemos `r print(length(pre_columnas.list))` efectivamente. Ahora necesitamos manipular la lista para convertira el una matriz de 17X3. No obstante antes, de manipular debemos de pasar la lista a un string.
+
+```{r}
+pre_columnas.unlist <- unlist(pre_columnas.list)
+#convertimos a matriz
+cabecera.raw <- matrix(pre_columnas.unlist,nrow=length(pre_columnas.list),
+                   ncol=3,byrow = T)
+head(cabecera.raw)
+```
+
+De la cabecera nos importan la segunda y la tercera columna que son las que tienen información
+
+```{r}
+cabecera  <- cabecera.raw[,2:3]
+## tambien la podemos convertir a data frame.
+cabecera <- as.data.frame(cabecera)
+colnames(cabecera) <- c("Variable","Clase")
+cabecera
+```
+
+Ya tenemos la cabecera, ahora vamos por los datos. Si recordamos lo habíamos guardado en la variable `predatos`. Tambiién habíamos observado que estaban separados por comas. Por lo tanto procedemos a separarlos por dicho caracter, y a parte, sabemos que los datos se componen `r nrow(cabecera)` columnas. Especificamos que se ordenen por filas, mediante el comando `byrow=T`.
+
+```{r}
+datos <-
+  as.data.frame(matrix(
+    unlist(strsplit(predatos, ",")),
+    ncol = nrow(cabecera),
+    byrow = T
+  ))
+colnames(datos) <- cabecera$Variable
+head(datos)
+```
+
+## Preprocesado de datos
+
+En este paso, necesitamos identificar qué variables son numéricas y cuales son factores.
+
+```{r}
+str(datos)
+```
+
+Todas están catalogadas como caracter. Bien podemos ir variable por variable y asignar la clase a la que corresponde, o podemos realizar lo siguiente.
+
+```{r}
+vars.numericas <- grep("numeric",cabecera$Clase)
+datos[,vars.numericas]<- apply(datos[,vars.numericas]
+                               , 2, 
+                               as.numeric)
+datos[,-vars.numericas] <- lapply(datos[,-vars.numericas],
+                                 as.factor)
+str(datos)
+```
+
+Ahora bien, también podemos realizar una función con los pasos anteriores.
+
+La siguiente función hace lo mismo que el código anterior, asignando a las variables la clase que corresponde.
+
+```{r}
+read.arff <- function(file_name){
+  archivo <- readLines(file_name)
+  
+  filas_cabecera <- grep("@attribute", predata)
+  
+  pre_columnas <- predata[filas_cabecera]
+  pre_columnas.list <- strsplit(predata[filas_cabecera], " ")
+  cabecera  <- cabecera.raw[, 2:3]
+  cabecera <- as.data.frame(cabecera)
+  colnames(cabecera) <- c("Variable", "Clase")
+  datos <-
+    as.data.frame(matrix(
+      unlist(strsplit(predatos, ",")),
+      ncol = nrow(cabecera),
+      byrow = T
+    ))
+  colnames(datos) <- cabecera$Variable
+  datos <- as.data.frame(datos)
+  numericas <- grep("numeric",cabecera$Clase)
+  datos[,numericas] <- lapply(datos[,numericas],as.numeric)
+  datos[,-numericas] <- lapply(datos[,-numericas],as.factor)
+
+  
+  return(datos)
+  
+}
+```
+
+```{r}
+datos  <- read.arff(archivo)
+str(datos)
+```
+
+# Preguntar a los datos
+
+```{r}
+head(datos)
+```
+
+```{r}
+cabecera
+```
+
+Vamos a realizar un ANOVA de 1 Vía. EL ANOVA es un modelo de regresión lineall donde las variables independientes son factores (o variables categóricas)
+
+Pero primero tenemos que ver gráficamente
+
+```{r}
+library(ggplot2)
+ggplot(datos,aes(y=Weight,CAEC))+geom_boxplot()
+```
+
+```{r}
+mdl <- lm(Weight ~ CAEC,data=datos)
+summary(mdl)
+```
+
+```{r}
+summary(aov(mdl))
+```
+
+```{r}
+DescTools::JarqueBeraTest(mdl$residuals-datos$Weight)
+```
+
+```{r}
+pairwise.t.test(datos$Weight,datos$CAEC,"BH")
+```
+
+```{r}
+kruskal.test(Weight~CAEC,data=datos)
+```
+
+```{r}
+pairwise.wilcox.test(datos$Weight,datos$CAEC,p.adjust.method = "BH")
+```
+
+Realizaremos una demostración de cómo el modelo lineal es una generalizacion del ANOVA y esta del t test
+
+```{r}
+mdl2  <- lm(datos$Weight~datos$SMOKE)
+summary(aov(mdl2))
+```
+
+```{r}
+t.test(datos$Weight ~datos$SMOKE,data=datos,var.equal=T)
+```
