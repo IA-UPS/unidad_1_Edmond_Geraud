@@ -81,8 +81,14 @@ ggarrange(p1,p2,p3,p4,p5)
 ```
 
 ```{r}
+library(nnet)
 set.seed(123456789)
 idx <- sample(1:nrow(datos),0.7*nrow(datos),replace = F)
 datos.l2.train <- datos.l2[idx,]
 datos.l2.test <- datos.l2[-idx,]
+
+
+
+modelo <- multinom(clase ~ ., data = datos.l2.train)
+
 ```
