@@ -157,12 +157,15 @@ Trabajad con lo que más os acomode
 -   $$
     Y=\mu_x/(max(x)-min(x))
     $$
+
 -   $$
     Y=median(x)/(max(x)-min(x))
     $$
+
 -   $$
     Y=(x-min(x))/(max(x)-min(x))
     $$
+
 -   $$
     Y=x-\mu_x/sd(x)
     $$
