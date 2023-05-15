@@ -20,12 +20,28 @@ library(e1071) ## bayes
 
 ```
 
-## Cargamos datis
+## Cargamos datos
 
 ```{r}
 # quitamos la primera columna
 datos <- read.table("./yeast.data",header = F)[,-1]
 
+head(datos)
+colnames(datos) <-c( "mcg", "gvh", "alm", "mit", "erl",
+"pox", "vac", "nuc", "clase")
+
+ datos$clase <- as.factor(datos$clase) # convertimos a factor
+ ## buscamos aquellas variables a excluir
+ w.exc <- which(datos$clase == "EXC")
+ w.vac <- which(datos$clase == "VAC")
+ w.pox <- which(datos$clase == "POX")
+ w.erl <- which(datos$clase == "ERL")
+ w <- c(w.exc, w.erl, w.pox, w.erl, w.vac)
+ datos <- datos[-w, -1] # excluimos los niveles y quitamos el nombre
+ datos$clase <- droplevels(datos$clase) # nos desacemos de los niveles no usados
+ # Renombrar niveles
+levels(datos$clase) <- list(CYT = "CYT", MEM = c("ME1", "ME2",
+"ME3"), MIT = "MIT", NUC = "NUC")
 ```
 
 Creamos las funciones que vamos a necesitar, es decir las funciones de transformación
@@ -46,10 +62,9 @@ Para hacer las transformaciones, solamente necesitamos las variables numéricas.
 ```{r}
 datos <- as.data.frame(datos)
 datos.numericos <- datos[, which(unlist(lapply(datos, is.numeric)))]
-clase <- datos$V10 <- as.factor(datos$V10)
-colnames(datos.numericos) <- paste0("Var", rep(1:8))
-### procedemos a crear una lista con todas las transformaciones
 
+### procedemos a crear una lista con todas las transformaciones
+clase <- datos$clase
 datos.lista <- list(
   raw = bind_cols(datos.numericos,clase=clase),
   zscore = bind_cols(zscore(datos.numericos),
@@ -77,7 +92,7 @@ datos.melt <- lapply(datos.lista,reshape2::melt)
 Podemos ver la cabecera de alguna transfomacion para ver el nombre nuevo de las variables
 
 ```{r}
-head(datos.melt$zscore)
+head(datos.melt$zscore,10)
 ```
 
 ```{r}
@@ -107,10 +122,6 @@ Así por ejemplo la normalización min-max es la mejor, puesto que no tenemos ou
 Otra forma de ver la transfomración es mediante gráficos de densidad
 
 ```{r}
-
-```
-
-```{r}
 for(l in 1:length(datos.melt)){
   
   X <- datos.melt[[l]]
@@ -138,6 +149,10 @@ corrplot::corrplot(cor(datos.numericos))
 
 ```{r}
 corrplot::corrplot(cor(datos.lista$media[,-ncol(datos)]))
+```
+
+```{r}
+corrplot::corrplot(cor(datos.lista$l2[,-ncol(datos)]))
 ```
 
 ### Partición de datos
@@ -184,7 +199,7 @@ accuracy <- vector("numeric",length = length(datos.lista))
 
 for(l in 1:length(datos.lista)){
   
-  accuracy[l] <- confusionMatrix(datos.test.lista$raw$clase,logisita.pred[[l]])$overall[1]
+  accuracy[l] <- confusionMatrix(logisita.pred[[l]],datos.test.lista$raw$clase,)$overall[1]
   
   
 }
@@ -193,6 +208,7 @@ names(accuracy) <- names(datos.lista)
 
 ### Este valor lo tienen que guardar solamente haremos por accuracy y kappa
 ### tenemos que mirar el objeto matconf
+accuracy
 
 ```
 
@@ -209,3 +225,25 @@ cvfit_lasso <- cv.glmnet(as.matrix(datos.train.lista$raw[,-ncol(datos)]),as.nume
 
 
 ```
+
+# KNN
+
+```{r}
+library(ISLR)
+library(caret)
+
+
+set.seed(400)
+ctrl <- trainControl(method="repeatedcv",repeats = 5,number = 3) #,claseProbs=TRUE,summaryFunction = twoclaseSummary)
+knnFit <- train(clase ~ ., data = datos.train.lista$raw, method = "knn", trControl = ctrl, tuneLength = 30)
+
+#Output of kNN fit
+plot(knnFit)
+
+knnPredict <- predict(knnFit,newdata = datos.test.lista$raw )
+#Get the confusion matrix to see accuracy value and other parameter values
+confusionMatrix(knnPredict, datos.test.lista$raw$clase)
+
+```
+
+
