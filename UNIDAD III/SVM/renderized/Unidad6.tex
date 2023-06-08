@@ -1,0 +1,884 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{48,48,48}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.81,0.69}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{\textbf{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.94,0.87,0.69}{#1}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.87,0.87,0.75}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.86,0.86,0.80}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.76,0.75,0.62}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.75,0.75,0.82}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.94,0.94,0.56}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.94,0.87,0.69}{#1}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.94,0.94,0.82}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.94,0.94,0.56}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{1.00,0.81,0.69}{\textbf{#1}}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.80,0.58,0.58}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.80,0.58,0.58}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.80,0.58,0.58}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage[spanish]{babel}
+\usepackage{float}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Unidad III: Algoritmos de caja negra},
+  pdfauthor={Edmond Géraud Aguilar},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Unidad III: Algoritmos de caja negra}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Predicción del tipo de tejido normal/tumoral en cáncer de
+colon utilizando máquinas de soporte vectorial}
+\author{Edmond Géraud Aguilar}
+\date{8 de June, 2023}
+
+\begin{document}
+\maketitle
+
+{
+\hypersetup{linkcolor=}
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\hypertarget{understanding-support-vector-machines}{%
+\section{Understanding Support Vector
+Machines}\label{understanding-support-vector-machines}}
+
+A \textbf{Support Vector Machine (SVM)} can be imagined as a surface
+that creates a boundary between points of data plotted in
+multidimensional that represent examples and their feature values. The
+goal of a SVM is to create a flat boundary called a \textbf{hyperplane},
+which divides the space to create fairly homogeneous partitions on
+either side. In this way, the SVM learning combines aspects of both the
+instance-based nearest neighbor learning and the linear regression
+modeling, The combination is extremely powerful, allowing SVMs to model
+highly complex relationships.
+
+SVMs can be adapted for use with nearly any type of learning task,
+including both classification and numeric prediction. Many of the
+algorithm's key successes have come in pattern recognition. Notable
+applications include:
+
+\begin{itemize}
+\tightlist
+\item
+  Classification of microarray gene expression data in the field of
+  bioinformatics to identify cancer or other genetic diseases
+\item
+  Text categorization such as identification of the language used in a
+  document or the classification of documents by subject matter
+\item
+  The detection of rare yet important events like combustion engine
+  failure, security breaches, or earthquakes
+\end{itemize}
+
+SVMs are most easily understood when used for binary classification,
+which is how the method has been traditionally applied. Therefore, in
+the remaining sections, we will focus only on SVM classifiers. The same
+principles you learn here will apply while adapting SVMs to other
+learning tasks such as numeric prediction.
+
+\hypertarget{classification-with-hyperplanes}{%
+\section{Classification with
+hyperplanes}\label{classification-with-hyperplanes}}
+
+As noted previously, SVMs use a boundary called a hyperplane to
+partition data into groups of similar class values. For example, the
+following figure depicts hyperplanes that separate groups of circles and
+squares in two and three dimensions. Because the circles and squares can
+be separated perfectly by the straight line or flat surface, they are
+said to be \emph{linearly separable}. At first, we'll consider only the
+simple case where this is true, but SVMs can also be extended to
+problems where the points are \emph{not linearly separable.}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,]{images/hyperplane} 
+
+}
+
+\caption{hyperplanes}\label{fig:fig1}
+\end{figure}
+
+In two dimensions, the task of the SVM algorithm is to identify a line
+that separates the two classes. As shown in the following figure, there
+is more than one choice of dividing line between the groups of circles
+and squares. Three such possibilities are labeled a, b, and c.~How does
+the algorithm choose?
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,]{images/severallines} 
+
+}
+
+\caption{several lines classifies}\label{fig:fig2}
+\end{figure}
+
+The answer to that question involves a search for the \textbf{Maximum
+Margin Hyperplane (MMH)} that creates the greatest separation between
+the two classes. Although any of the three lines separating the circles
+and squares would correctly classify all the data points, it is likely
+that the line that leads to the greatest separation will generalize the
+best to the future data. The maximum margin will improve the chance
+that, in spite of random noise, the points will remain on the correct
+side of the boundary.
+
+The \textbf{support vectors} (indicated by arrows in the figure that
+follows) are the points from each class that are the closest to the MMH;
+each class must have at least one support vector, but it is possible to
+have more than one. Using the support vectors alone, it is possible to
+define the MMH. This is a key feature of SVMs; the support vectors
+provide a very compact way to store a classification model, even if the
+number of features is extremely large.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,]{images/suportvectors} 
+
+}
+
+\caption{Support Vectors}\label{fig:fig3}
+\end{figure}
+
+The algorithm to identify the support vectors relies on vector geometry
+and involves some fairly tricky math that is outside the scope. However,
+the basic principles of the process are fairly straightforward.
+
+\hypertarget{the-case-of-linearly-separable-data}{%
+\section{The case of linearly separable
+data}\label{the-case-of-linearly-separable-data}}
+
+It is easiest to understand how to find the maximum margin under the
+assumption that the classes are linearly separable. In this case, the
+\emph{MMH} is as far away as possible from the outer boundaries of the
+two groups of data points. These outer boundaries are known as the
+\textbf{convex hull}. The \emph{MMH} is then the perpendicular bisector
+of the shortest line between the two convex hulls. Sophisticated
+computer algorithms that use a technique known as \textbf{quadratic
+optimization} are capable of finding the maximum margin in this way.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,]{images/convexhull} 
+
+}
+
+\caption{Convex Hull}\label{fig:fig4}
+\end{figure}
+
+An alternative (but equivalent) approach involves a search through the
+space of every possible hyperplane in order to find a set of two
+parallel planes that divide the points into homogeneous groups yet
+themselves are as far apart as possible.
+
+To understand this search process, we'll need to define exactly what we
+mean by a hyperplane. In n-dimensional space, the following equation is
+used.
+
+\[ \vec w \cdot  \vec x+b=0\]
+
+\(w\) is a vector of \(n\) weights, that is,
+\({w 1 , w 2 , ..., w n }\), and \(b\) is a single number known as the
+bias. The bias is conceptually equivalent to the intercept term in the
+slope-intercept in Regression Methods.
+
+Using this formula, the goal of the process is to find a set of weights
+that specify two hyperplanes, as follows:
+
+\[ \vec w \cdot  \vec x+b\geq +1 \\  \vec w \cdot  \vec x+b\leq -1 \]
+
+We will also require that these hyperplanes are specified such that all
+the points of one class fall above the first hyperplane and all the
+points of the other class fall beneath the second hyperplane. This is
+possible so long as the data are linearly separable.
+
+Vector geometry defines the distance between these two planes as:
+
+\[\frac{2}{||\vec w ||} \] Here, \(||w||\) indicates the Euclidean norm
+(the distance from the origin to vector \(w\)). Because \(||w||\) is in
+the denominator, to maximize distance, we need to minimize \(||w||\).
+The task is typically reexpressed as a set of constraints, as follows:
+
+\[min\frac{1}{2}||\vec w||^2 \\ s.t \ y_i(\vec w \cdot \vec x_i-b ) \geq 1,\forall\vec x_i \]
+
+Although this looks messy, it's really not too complicated to understand
+conceptually. Basically, the first line implies that we need to minimize
+the Euclidean norm (squared and divided by two to make the calculation
+easier). The second line notes that this is subject to \((s.t.)\), the
+condition that each of the \(y_i\) data points is correctly classified.
+Note that y indicates the class value (transformed to either \(+1\) or
+\(-1\))
+
+As with the other method for finding the maximum margin, finding a
+solution to this problem is a task best left for quadratic optimization
+software. Although it can be processor-intensive, specialized algorithms
+are capable of solving these problems quickly even on fairly large
+datasets.
+
+\hypertarget{the-case-of-nonlinearly-separable-data}{%
+\section{The case of nonlinearly separable
+data}\label{the-case-of-nonlinearly-separable-data}}
+
+So far we worked through the theory behing SVMs, but what happens when
+the data is not linearly separable? the solution to this problem is the
+use of a slack variable, which creates a soft margin that allows some
+points to fall on the incorrect side of the margin. The figure that
+follows illustrates two points falling on the wrong side of the line
+with the corresponding slack terms (denoted with the Greek letter Xi
+\(\xi\))
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,]{images/nonlinearlyspearable} 
+
+}
+
+\caption{Non linearly separable}\label{fig:fig5}
+\end{figure}
+
+A cost value (denoted as \(C\)) is applied to all points that violate
+the constraints, and rather than finding the maximum margin, the
+algorithm attempts to minimize the total cost. We can therefore revise
+the optimization problem to:
+\[min\frac{1}{2}||\vec w||^2 +C\sum_i^n\xi_i \\ s.t \ y_i(\vec w \cdot \vec x_i-b ) \geq 1-\xi_i,\forall\vec x_i,\xi_i \]
+The important piece to understand is the addition of the cost parameter
+C. Modifying this value will adjust the penalty, for example, the fall
+on the wrong side of the hyperplane. The greater the cost parameter, the
+harder the optimization will try to achieve 100 percent separation. On
+the other hand, a lower cost parameter will place the emphasis on a
+wider overall margin. It is important to strike a balance between these
+two in order to create a model that generalizes well to future data.
+
+\hypertarget{using-kernels-for-non-linear-spaces}{%
+\section{Using kernels for non-linear
+spaces}\label{using-kernels-for-non-linear-spaces}}
+
+In many real-world applications, the relationships between variables are
+nonlinear. As we just discovered, a SVM can still be trained on such
+data through the addition of a slack variable, which allows some
+examples to be misclassified. However, this is not the only way to
+approach the problem of nonlinearity. A key feature of SVMs is their
+ability to map the problem into a higher dimension space using a process
+known as the \textbf{kernel trick}. In doing so, a nonlinear
+relationship may suddenly appear to be quite linear.
+
+Though this seems like nonsense, it is actually quite easy to illustrate
+by example. In the following figure, the scatterplot on the left depicts
+a nonlinear relationship between a weather class (sunny or snowy) and
+two features: latitude and longitude. The points at the center of the
+plot are members of the snowy class, while the points at the margins are
+all sunny. Such data could have been generated from a set of weather
+reports, some of which were obtained from stations near the top of a
+mountain, while others were obtained from stations around the base of
+the mountain.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,]{images/kerneltrick} 
+
+}
+
+\caption{Kernel Trick}\label{fig:fig6}
+\end{figure}
+
+On the right side of the figure, after the kernel trick has been
+applied, we look at the data through the lens of a new dimension:
+altitude. With the addition of this feature, the classes are now
+perfectly linearly separable. This is possible because we have obtained
+a new perspective on the data. In the left figure, we are viewing the
+mountain from a bird's eye view, while in the right one, we are viewing
+the mountain from a distance at the ground level. Here, the trend is
+obvious: snowy weather is found at higher altitudes.
+
+SVMs with nonlinear kernels add additional dimensions to the data in
+order to create separation in this way. Essentially, the kernel trick
+involves a process of constructing new features that express
+mathematical relationships between measured characteristics. For
+instance, the altitude feature can be expressed mathematically as an
+interaction between latitude and longitude---the closer the point is to
+the center of each of these scales, the greater the altitude. This
+allows SVM to learn concepts that were not explicitly measured in the
+original data.
+
+\hypertarget{strengths-and-weaknesses}{%
+\section{Strengths and Weaknesses}\label{strengths-and-weaknesses}}
+
+SVMs with nonlinear kernels are extremely powerful classifiers, although
+they do have some downsides, as shown in the following table:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5254}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.4746}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Strengths}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Weaknesses}
+\end{minipage} \\
+\midrule()
+\endhead
+* Can be used for classification or numeric prediction problems & *
+Finding the best model requirestesting of various combinations ofkernels
+and model parameters \\
+* Not overly influenced by noisy data and not very prone to overfitting
+& * Can be slow to train, particularly ifthe input dataset has a large
+numberof features or examples \\
+* Maybe easier to use than neural networks, particularly due to
+theexistence of several well-supported SVM algorithms & * Results in a
+complex black boxmodel that is difficult, if notimpossible, to
+interpret \\
+* Gaining popularity due to its high accuracy and high-profile wins
+indata mining competitions & \\
+\bottomrule()
+\end{longtable}
+
+Kernel functions, in general, are of the following form. The function
+denoted by the Greek letter phi, that is, \(\phi (x)\), is a mapping of
+the data into another space. Therefore, the general kernel function
+applies some transformation to the feature vectors \(x_i\) and \(x_j\)
+and combines them using the \textbf{dot product}, which takes two
+vectors and returns a single number.
+
+\[K(\vec x_i,\vec x_j) = \phi(\vec x_i) \cdot \phi(\vec x_j)\]
+
+Using this form, kernel functions have been developed for many different
+domains of data. A few of the most commonly used kernel functions are
+listed as follows. Nearly all SVM software packages will include these
+kernels, among many others.
+
+\begin{itemize}
+\tightlist
+\item
+  The \textbf{linear kernel} does not transform the data at all.
+  Therefore, it can be expressed simply as the dot product of the
+  features:
+\end{itemize}
+
+\[K(\vec x_i,\vec x_j) = \vec x_i \cdot \vec x_j\]
+
+\begin{itemize}
+\tightlist
+\item
+  The \textbf{polynomial kernel} of degree \emph{d} adds a simple
+  nonlinear transformation of the data.
+\end{itemize}
+
+\[ K(\vec x_i,\vec x_j) = (\vec x_i \cdot \vec x_j+1)^d\]
+
+\begin{itemize}
+\tightlist
+\item
+  The \textbf{sigmoid kernel} results in a SVM model somewhat analogous
+  to a neural network using a sigmoid activation function. The Greek
+  letters kappa and delta are used as kernel parameters:
+\end{itemize}
+
+\[ K(\vec x_i,\vec x_j) = tanh(\kappa\ \vec x_i \cdot \vec x_j+\delta)\]
+* The \textbf{Gaussian RBF kernel} is similar to a RBF neural network.
+The RBF kernel performs well on many types of data and is thought to be
+a reasonable starting point for many learning tasks:
+
+\[K(\vec x_i,\vec x_j) = e^{\frac{-||\vec x_i-\vec x_j||^2}{2 \sigma ^2}} \]
+
+There is no reliable rule to match a kernel to a particular learning
+task. The fit depends heavily on the concept to be learned as well as
+the amount of training data and the relationships among the features.
+Often, a bit of trial and error is required by training and evaluating
+several SVMs on a validation dataset. This said, in many cases, the
+choice of kernel is arbitrary, as the performance may vary slightly. To
+see how this works in practice, let's apply our understanding of SVM
+classification to a real-world problem.
+
+\hypertarget{workflow-for-detect-tumor-in-colon-samples}{%
+\section{Workflow for detect tumor in colon
+samples}\label{workflow-for-detect-tumor-in-colon-samples}}
+
+\hypertarget{step-1-collect-data-and-trasnform}{%
+\subsection{Step 1: Collect data and
+trasnform}\label{step-1-collect-data-and-trasnform}}
+
+The data is obtained from an expression analisis in patients with colon
+cancer by means of microarrays of olinonucleotides. After a process of
+filtered and normalization, there has been selected, the expression of
+2000 genes and 62 samples of colon tissue where 40 are tumoral adn 22
+are healthy. The last variable, indicates ``n'' as normal and ``t'' as
+tumoral.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ clases }\OtherTok{\textless{}{-}} \FunctionTok{as.factor}\NormalTok{(datos[, }\FunctionTok{ncol}\NormalTok{(datos)])}
+\SpecialCharTok{\textgreater{}}\NormalTok{ X }\OtherTok{\textless{}{-}}\NormalTok{ datos[, }\SpecialCharTok{{-}}\FunctionTok{ncol}\NormalTok{(datos)]}
+\SpecialCharTok{\textgreater{}}\NormalTok{ X.melt }\OtherTok{\textless{}{-}} \FunctionTok{melt}\NormalTok{((}\FunctionTok{log2}\NormalTok{(X)))}
+\SpecialCharTok{\textgreater{}}\NormalTok{ p }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ value, }\AttributeTok{colour =}\NormalTok{ variable), }\AttributeTok{data =}\NormalTok{ X.melt)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ p }\SpecialCharTok{+} \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{show.legend =}\NormalTok{ F)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{/home/usuario/Desktop/UPS/masterUOC/ML_completo/MLed/machinelearning/Unidad6/Tarea6/renderized/Unidad6_files/figure-latex/frag2-1} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ X.log }\OtherTok{\textless{}{-}} \FunctionTok{log2}\NormalTok{(X)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ datos.log }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(X, clases)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{class}\NormalTok{(datos.log)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "data.frame"
+\end{verbatim}
+
+\hypertarget{step-2-split-the-data-in-train-and-test}{%
+\subsection{Step 2: Split the data in train and
+test}\label{step-2-split-the-data-in-train-and-test}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(datos)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \CommentTok{\# create training and test data}
+\ErrorTok{\textgreater{}} \FunctionTok{set.seed}\NormalTok{(params}\SpecialCharTok{$}\NormalTok{seed.train)}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}}\NormalTok{ train }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(n, }\FunctionTok{floor}\NormalTok{(n }\SpecialCharTok{*}\NormalTok{ params}\SpecialCharTok{$}\NormalTok{p.train))}
+\SpecialCharTok{\textgreater{}}\NormalTok{ datos.train }\OtherTok{\textless{}{-}}\NormalTok{ datos.log[train, ]}
+\SpecialCharTok{\textgreater{}}\NormalTok{ datos.test }\OtherTok{\textless{}{-}}\NormalTok{ datos.log[}\SpecialCharTok{{-}}\NormalTok{train, ]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{step-3---model-training}{%
+\subsection{Step 3 - Model Training}\label{step-3---model-training}}
+
+Usamos un kernel lineal
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ clasifier.lineal }\OtherTok{\textless{}{-}} \FunctionTok{ksvm}\NormalTok{(clases }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ datos.train, }\AttributeTok{kernel =} \StringTok{"vanilladot"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+ Setting default kernel parameters  
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ clasifier.gauss }\OtherTok{\textless{}{-}} \FunctionTok{ksvm}\NormalTok{(clases }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ datos.train, }\AttributeTok{kernel =} \StringTok{"rbfdot"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ clasifier.lineal}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Support Vector Machine object of class "ksvm" 
+
+SV type: C-svc  (classification) 
+ parameter : cost C = 1 
+
+Linear (vanilla) kernel function. 
+
+Number of Support Vectors : 27 
+
+Objective Function Value : -0.0332 
+Training error : 0 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ clasifier.gauss}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Support Vector Machine object of class "ksvm" 
+
+SV type: C-svc  (classification) 
+ parameter : cost C = 1 
+
+Gaussian Radial Basis kernel function. 
+ Hyperparameter : sigma =  0.000563011827446795 
+
+Number of Support Vectors : 40 
+
+Objective Function Value : -20.7955 
+Training error : 0.02439 
+\end{verbatim}
+
+\hypertarget{step-4-evaluating-model-performance}{%
+\subsection{Step 4: evaluating model
+performance}\label{step-4-evaluating-model-performance}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ prediction.linear }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(clasifier.lineal, datos.test)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ res.linear }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(prediction.linear, datos.test}\SpecialCharTok{$}\NormalTok{clases)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ prediction.gauss }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(clasifier.gauss, datos.test)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ res.gauss }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(prediction.gauss, datos.test}\SpecialCharTok{$}\NormalTok{clases)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ (cmatrix1 }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(res.linear, }\AttributeTok{positive =} \StringTok{"t"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Confusion Matrix and Statistics
+
+                 
+prediction.linear  n  t
+                n  4  3
+                t  0 14
+                                          
+               Accuracy : 0.8571          
+                 95% CI : (0.6366, 0.9695)
+    No Information Rate : 0.8095          
+    P-Value [Acc > NIR] : 0.4126          
+                                          
+                  Kappa : 0.64            
+                                          
+ Mcnemar's Test P-Value : 0.2482          
+                                          
+            Sensitivity : 0.8235          
+            Specificity : 1.0000          
+         Pos Pred Value : 1.0000          
+         Neg Pred Value : 0.5714          
+             Prevalence : 0.8095          
+         Detection Rate : 0.6667          
+   Detection Prevalence : 0.6667          
+      Balanced Accuracy : 0.9118          
+                                          
+       'Positive' Class : t               
+                                          
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ (cmatrix2 }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(res.gauss, }\AttributeTok{positive =} \StringTok{"t"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Confusion Matrix and Statistics
+
+                
+prediction.gauss  n  t
+               n  2  2
+               t  2 15
+                                          
+               Accuracy : 0.8095          
+                 95% CI : (0.5809, 0.9455)
+    No Information Rate : 0.8095          
+    P-Value [Acc > NIR] : 0.6296          
+                                          
+                  Kappa : 0.3824          
+                                          
+ Mcnemar's Test P-Value : 1.0000          
+                                          
+            Sensitivity : 0.8824          
+            Specificity : 0.5000          
+         Pos Pred Value : 0.8824          
+         Neg Pred Value : 0.5000          
+             Prevalence : 0.8095          
+         Detection Rate : 0.7143          
+   Detection Prevalence : 0.8095          
+      Balanced Accuracy : 0.6912          
+                                          
+       'Positive' Class : t               
+                                          
+\end{verbatim}
+
+\hypertarget{step-5-opcional-situations}{%
+\subsection{Step 5 (opcional)
+situations:}\label{step-5-opcional-situations}}
+
+\hypertarget{fold-crossvalidation}{%
+\subsubsection{5-fold crossvalidation}\label{fold-crossvalidation}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \CommentTok{\# modelo 5{-}crossvalidation}
+\ErrorTok{\textgreater{}}\NormalTok{ model}\FloatTok{.5}\NormalTok{v.linear }\OtherTok{\textless{}{-}} \FunctionTok{train}\NormalTok{(clases }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., datos.train, }\AttributeTok{method =} \StringTok{"svmLinear"}\NormalTok{,}
+\SpecialCharTok{+}     \AttributeTok{trControl =} \FunctionTok{trainControl}\NormalTok{(}\AttributeTok{method =} \StringTok{"cv"}\NormalTok{, }\AttributeTok{number =} \DecValTok{5}\NormalTok{), }\AttributeTok{tuneGrid =} \ConstantTok{NULL}\NormalTok{,}
+\SpecialCharTok{+}     \AttributeTok{tuneLength =} \DecValTok{10}\NormalTok{, }\AttributeTok{trace =} \ConstantTok{FALSE}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# plot(model.5v, alpha=0.6)}
+\ErrorTok{\textgreater{}} \FunctionTok{summary}\NormalTok{(model}\FloatTok{.5}\NormalTok{v.linear)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Length  Class   Mode 
+     1   ksvm     S4 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ prediction }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(model}\FloatTok{.5}\NormalTok{v.linear, datos.test)  }\CommentTok{\# predict}
+\SpecialCharTok{\textgreater{}}\NormalTok{ res.linear}\FloatTok{.2} \OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(prediction, datos.test}\SpecialCharTok{$}\NormalTok{clases)  }\CommentTok{\# compare}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# predict can also return the probability for each class:}
+\ErrorTok{\textgreater{}} \FunctionTok{confusionMatrix}\NormalTok{(res.linear}\FloatTok{.2}\NormalTok{, }\AttributeTok{positive =} \StringTok{"t"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Confusion Matrix and Statistics
+
+          
+prediction  n  t
+         n  4  3
+         t  0 14
+                                          
+               Accuracy : 0.8571          
+                 95% CI : (0.6366, 0.9695)
+    No Information Rate : 0.8095          
+    P-Value [Acc > NIR] : 0.4126          
+                                          
+                  Kappa : 0.64            
+                                          
+ Mcnemar's Test P-Value : 0.2482          
+                                          
+            Sensitivity : 0.8235          
+            Specificity : 1.0000          
+         Pos Pred Value : 1.0000          
+         Neg Pred Value : 0.5714          
+             Prevalence : 0.8095          
+         Detection Rate : 0.6667          
+   Detection Prevalence : 0.6667          
+      Balanced Accuracy : 0.9118          
+                                          
+       'Positive' Class : t               
+                                          
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \CommentTok{\# modelo 5{-}crossvalidation}
+\ErrorTok{\textgreater{}}\NormalTok{ model}\FloatTok{.5}\NormalTok{v.radial }\OtherTok{\textless{}{-}} \FunctionTok{train}\NormalTok{(clases }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., datos.train, }\AttributeTok{method =} \StringTok{"svmRadial"}\NormalTok{,}
+\SpecialCharTok{+}     \AttributeTok{trControl =} \FunctionTok{trainControl}\NormalTok{(}\AttributeTok{method =} \StringTok{"cv"}\NormalTok{, }\AttributeTok{number =} \DecValTok{5}\NormalTok{), }\AttributeTok{tuneGrid =} \ConstantTok{NULL}\NormalTok{,}
+\SpecialCharTok{+}     \AttributeTok{tuneLength =} \DecValTok{10}\NormalTok{, }\AttributeTok{trace =} \ConstantTok{FALSE}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# plot(model.5v, alpha=0.6)}
+\ErrorTok{\textgreater{}} \FunctionTok{summary}\NormalTok{(model}\FloatTok{.5}\NormalTok{v.radial)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Length  Class   Mode 
+     1   ksvm     S4 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ prediction }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(model}\FloatTok{.5}\NormalTok{v.radial, datos.test)  }\CommentTok{\# predict}
+\SpecialCharTok{\textgreater{}}\NormalTok{ res.radial}\FloatTok{.2} \OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(prediction, datos.test}\SpecialCharTok{$}\NormalTok{clases)  }\CommentTok{\# compare}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# predict can also return the probability for each class:}
+\ErrorTok{\textgreater{}} \FunctionTok{confusionMatrix}\NormalTok{(res.radial}\FloatTok{.2}\NormalTok{, }\AttributeTok{positive =} \StringTok{"t"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Confusion Matrix and Statistics
+
+          
+prediction  n  t
+         n  4  2
+         t  0 15
+                                          
+               Accuracy : 0.9048          
+                 95% CI : (0.6962, 0.9883)
+    No Information Rate : 0.8095          
+    P-Value [Acc > NIR] : 0.2077          
+                                          
+                  Kappa : 0.7407          
+                                          
+ Mcnemar's Test P-Value : 0.4795          
+                                          
+            Sensitivity : 0.8824          
+            Specificity : 1.0000          
+         Pos Pred Value : 1.0000          
+         Neg Pred Value : 0.6667          
+             Prevalence : 0.8095          
+         Detection Rate : 0.7143          
+   Detection Prevalence : 0.7143          
+      Balanced Accuracy : 0.9412          
+                                          
+       'Positive' Class : t               
+                                          
+\end{verbatim}
+
+\hypertarget{bootstrap}{%
+\subsubsection{Bootstrap}\label{bootstrap}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \CommentTok{\# Por defecto es Bootstrap, con 25 repeticiones para 3}
+\ErrorTok{\textgreater{}} \CommentTok{\# posibles decay y 3 posibles sizes}
+\ErrorTok{\textgreater{}}\NormalTok{ model.bootstrap.linear }\OtherTok{\textless{}{-}} \FunctionTok{train}\NormalTok{(clases }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., datos.train, }\AttributeTok{method =} \StringTok{"svmLinear"}\NormalTok{,}
+\SpecialCharTok{+}     \AttributeTok{trace =} \ConstantTok{FALSE}\NormalTok{)  }\CommentTok{\# train}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# we also add parameter \textquotesingle{}preProc = c(\textquotesingle{}center\textquotesingle{}, \textquotesingle{}scale\textquotesingle{}))\textquotesingle{}}
+\ErrorTok{\textgreater{}} \CommentTok{\# at train() for centering and scaling the data}
+\ErrorTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \FunctionTok{summary}\NormalTok{(model.bootstrap.linear)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Length  Class   Mode 
+     1   ksvm     S4 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ prediction }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(model.bootstrap.linear, datos.test)  }\CommentTok{\# predict}
+\SpecialCharTok{\textgreater{}}\NormalTok{ res.gauss}\FloatTok{.2} \OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(prediction, datos.test}\SpecialCharTok{$}\NormalTok{clases)  }\CommentTok{\# compare}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# predict can also return the probability for each class:}
+\ErrorTok{\textgreater{}} \CommentTok{\# prediction \textless{}{-} predict(model.bootstrap.linear, datos.test,}
+\ErrorTok{\textgreater{}} \CommentTok{\# type=\textquotesingle{}prob\textquotesingle{}) head(prediction)}
+\ErrorTok{\textgreater{}} \FunctionTok{confusionMatrix}\NormalTok{(res.gauss}\FloatTok{.2}\NormalTok{, }\AttributeTok{positive =} \StringTok{"t"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Confusion Matrix and Statistics
+
+          
+prediction  n  t
+         n  4  3
+         t  0 14
+                                          
+               Accuracy : 0.8571          
+                 95% CI : (0.6366, 0.9695)
+    No Information Rate : 0.8095          
+    P-Value [Acc > NIR] : 0.4126          
+                                          
+                  Kappa : 0.64            
+                                          
+ Mcnemar's Test P-Value : 0.2482          
+                                          
+            Sensitivity : 0.8235          
+            Specificity : 1.0000          
+         Pos Pred Value : 1.0000          
+         Neg Pred Value : 0.5714          
+             Prevalence : 0.8095          
+         Detection Rate : 0.6667          
+   Detection Prevalence : 0.6667          
+      Balanced Accuracy : 0.9118          
+                                          
+       'Positive' Class : t               
+                                          
+\end{verbatim}
+
+\end{document}
